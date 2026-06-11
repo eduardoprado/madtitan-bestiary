@@ -1,0 +1,347 @@
+# Extraction Pipeline
+
+This document defines the names and intermediate objects used by the private-first
+monster extraction pipeline.
+
+## Canonical Steps
+
+```text
+PDF
+-> Text Extraction
+-> Candidate Segmentation
+-> Candidate Normalization
+-> Contract Validation
+-> Acceptance Gate
+-> MonsterOccurrence or QuarantineRecord
+```
+
+### 1. Text Extraction
+
+Input: a source PDF page or page span.
+
+Output: `ExtractedPageText`.
+
+This step turns page content into readable text. It does not try to understand the stat
+block yet.
+
+Supported extraction methods:
+
+- `pdf_text_layer`: read the embedded PDF text/OCR layer.
+- `local_ocr`: run local OCR against page images.
+- `llm_vision_text`: use an explicitly approved vision-capable LLM to transcribe page
+  images when local text extraction fails.
+- `manual_transcription`: manually typed text for tests or repair.
+
+The output should preserve source page identity, extraction method, confidence, and
+quality notes. Raw extracted text remains private data and must not be committed unless
+it is synthetic or clearly licensed.
+
+### 2. Candidate Segmentation
+
+Input: `ExtractedPageText`.
+
+Output: one or more `MonsterCandidate` records.
+
+This step asks: "Where are the monster stat blocks in this text?"
+
+It identifies likely monster boundaries, page spans, name hints, section text, and
+candidate-level confidence. A candidate can still be messy, incomplete, or wrong. It is
+not trusted structured data.
+
+### 3. Candidate Normalization
+
+Input: `MonsterCandidate`.
+
+Output: `MonsterOccurrenceDraft`.
+
+This step converts a candidate into the shape expected by the shared monster contract.
+It extracts and normalizes fields such as AC, HP, speeds, abilities, attacks, damage,
+conditions, spellcasting metadata, legendary actions, habitats, and provenance.
+
+This step may be deterministic, heuristic, LLM-assisted, or manual, but it must record
+the normalizer version and method.
+
+### 4. Contract Validation
+
+Input: `MonsterOccurrenceDraft`.
+
+Output: either a valid `MonsterOccurrence` or validation errors.
+
+This step validates the draft against the Pydantic `MonsterOccurrence` contract. The
+fixture validator CLI is the first implementation of this check.
+
+### 5. Acceptance Gate
+
+Input: validation result plus candidate and provenance metadata.
+
+Output:
+
+- `MonsterOccurrence`, if the draft is valid and confidence is acceptable.
+- `QuarantineRecord`, if the draft is invalid, low-confidence, incomplete, or requires
+  review.
+
+The acceptance gate is the boundary between raw/private extraction work and the clean
+dataset used by app/search/analytics models.
+
+## Flow Chart
+
+```mermaid
+flowchart TD
+    PDF["Source PDF page/span"]
+
+    TEX["1. Text Extraction<br/>ExtractedPageText"]
+    SEG["2. Candidate Segmentation<br/>MonsterCandidate"]
+    NOR["3. Candidate Normalization<br/>MonsterOccurrenceDraft"]
+    VAL["4. Contract Validation"]
+    GATE["5. Acceptance Gate"]
+
+    MON["Accepted MonsterOccurrence<br/>clean dataset"]
+    QUAR["QuarantineRecord<br/>debug/review/repair"]
+    REPAIR["Repair / Reprocess<br/>manual edits, parser improvement,<br/>OCR retry, or LLM-assisted repair"]
+
+    PDF --> TEX --> SEG --> NOR --> VAL --> GATE
+    GATE -->|valid + acceptable confidence| MON
+    GATE -->|invalid, incomplete, low confidence| QUAR
+    QUAR --> REPAIR
+    REPAIR -->|candidate text/bounds changed| SEG
+    REPAIR -->|structured draft changed| NOR
+```
+
+Quarantine is not a dead end. A quarantined record can be reviewed manually, retried
+with a better extraction method, repaired by a future parser, or passed through an
+approved LLM-assisted repair path. After repair, it re-enters the pipeline at Candidate
+Segmentation or Candidate Normalization, depending on what changed.
+
+## Pipeline Objects
+
+### ExtractedPageText
+
+`ExtractedPageText` represents private text extracted from one source page.
+
+Recommended fields:
+
+```json
+{
+  "extracted_page_text_id": "mm2024-filehash-p0255-text-v1",
+  "source": {
+    "source_book_id": "monster-manual-2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "mm2024-filehash",
+    "source_file_checksum": "sha256:...",
+    "page_number": 255,
+    "page_label": "255"
+  },
+  "extraction": {
+    "method": "pdf_text_layer",
+    "tool_name": "pymupdf",
+    "tool_version": "x.y.z",
+    "run_id": "extract-run-2026-06-11T05:00:00Z",
+    "confidence": 0.92,
+    "quality": "good",
+    "warnings": []
+  },
+  "text": "private extracted page text",
+  "layout": {
+    "blocks": [],
+    "has_text_layer": true,
+    "is_scanned": false
+  },
+  "created_at": "2026-06-11T05:00:00Z"
+}
+```
+
+### MonsterCandidate
+
+`MonsterCandidate` is the proposed stat-block segment produced by Candidate
+Segmentation. It should contain enough context to debug failed parsing and to reproduce
+how the candidate was created.
+
+Recommended structure:
+
+```json
+{
+  "candidate_id": "mm2024-p0255-adult-red-dragon-candidate-v1",
+  "status": "pending",
+  "source": {
+    "source_book_id": "monster-manual-2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "mm2024-filehash",
+    "source_file_checksum": "sha256:...",
+    "page_start": 255,
+    "page_end": 255,
+    "page_labels": ["255"]
+  },
+  "lineage": {
+    "extracted_page_text_ids": ["mm2024-filehash-p0255-text-v1"],
+    "segmentation_run_id": "segment-run-2026-06-11T05:10:00Z",
+    "segmentation_method": "heading_and_statblock_rules",
+    "segmenter_version": "segmenter-v0.1.0"
+  },
+  "candidate": {
+    "name_hint": "Adult Red Dragon",
+    "creature_type_hint": "dragon",
+    "page_span_text": "private candidate text",
+    "sections": [
+      {
+        "label": "header",
+        "text": "private section text"
+      },
+      {
+        "label": "actions",
+        "text": "private section text"
+      }
+    ],
+    "start_marker": "ADULT RED DRAGON",
+    "end_marker": "LEGENDARY ACTIONS",
+    "raw_text_hash": "sha256:..."
+  },
+  "location": {
+    "page_start": 255,
+    "page_end": 255,
+    "text_start_offset": 0,
+    "text_end_offset": 2800,
+    "bounding_boxes": [
+      {
+        "page": 255,
+        "x0": 0.05,
+        "y0": 0.04,
+        "x1": 0.95,
+        "y1": 0.96,
+        "unit": "page_ratio"
+      }
+    ]
+  },
+  "quality": {
+    "confidence": 0.88,
+    "text_quality": "good",
+    "segmentation_quality": "complete",
+    "warnings": [
+      {
+        "code": "possible_wrapped_action",
+        "message": "One action may continue across a column break."
+      }
+    ]
+  },
+  "normalization": {
+    "recommended_method": "deterministic_rules",
+    "attempt_count": 0,
+    "last_attempt_at": null
+  },
+  "audit": {
+    "created_at": "2026-06-11T05:10:00Z",
+    "created_by": "candidate_segmentation",
+    "private_content": true
+  }
+}
+```
+
+Field guidance:
+
+- `candidate_id`: stable identifier for this candidate version.
+- `status`: usually `pending`, `accepted`, `quarantined`, `superseded`, or `ignored`.
+- `source`: book/file/page identity needed for provenance and debugging.
+- `lineage`: links back to extracted text and the segmentation code/run that produced
+  the candidate.
+- `candidate.name_hint`: best-effort monster name; not trusted until normalization and
+  validation succeed.
+- `candidate.page_span_text`: private raw candidate text. Do not commit real book text.
+- `candidate.sections`: optional labeled chunks that make normalization easier.
+- `location`: text offsets and optional bounding boxes for visual QA and page-image
+  repair.
+- `quality`: confidence, quality labels, and warnings from segmentation.
+- `normalization`: tracks whether this candidate has been tried before and which
+  method should handle it.
+- `audit.private_content`: true for real extracted book content.
+
+### MonsterOccurrenceDraft
+
+`MonsterOccurrenceDraft` is a proposed structured object shaped like
+`MonsterOccurrence`, but not validated yet. It can be represented as a plain JSON object
+before validation.
+
+Recommended wrapper:
+
+```json
+{
+  "draft_id": "mm2024-p0255-adult-red-dragon-draft-v1",
+  "candidate_id": "mm2024-p0255-adult-red-dragon-candidate-v1",
+  "normalization": {
+    "method": "deterministic_rules",
+    "normalizer_version": "normalizer-v0.1.0",
+    "run_id": "normalize-run-2026-06-11T05:20:00Z",
+    "confidence": 0.86,
+    "warnings": []
+  },
+  "monster": {
+    "name": "Adult Red Dragon"
+  }
+}
+```
+
+The `monster` payload is what Contract Validation checks.
+
+### QuarantineRecord
+
+`QuarantineRecord` stores failed, incomplete, or low-confidence work without losing
+debug context.
+
+Recommended structure:
+
+```json
+{
+  "quarantine_record_id": "quarantine-mm2024-p0255-adult-red-dragon-v1",
+  "candidate_id": "mm2024-p0255-adult-red-dragon-candidate-v1",
+  "draft_id": "mm2024-p0255-adult-red-dragon-draft-v1",
+  "reason": "contract_validation_failed",
+  "severity": "review_required",
+  "source": {
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "page_start": 255,
+    "page_end": 255
+  },
+  "errors": [
+    {
+      "path": "hit_point_formula.die_type",
+      "message": "String should match pattern '^d\\\\d+$'",
+      "code": "string_pattern_mismatch"
+    }
+  ],
+  "raw_candidate_ref": "raw.monster_candidate:mm2024-p0255-adult-red-dragon-candidate-v1",
+  "draft_payload": {},
+  "repair": {
+    "eligible_for_manual_review": true,
+    "eligible_for_ocr_retry": false,
+    "eligible_for_llm_repair": true,
+    "next_recommended_step": "manual_review"
+  },
+  "audit": {
+    "created_at": "2026-06-11T05:21:00Z",
+    "parser_version": "normalizer-v0.1.0",
+    "private_content": true
+  }
+}
+```
+
+Quarantine records should preserve enough information to reproduce the failure, but
+large private text bodies can be stored by reference rather than copied repeatedly.
+
+## Naming Summary
+
+Processes:
+
+- Text Extraction
+- Candidate Segmentation
+- Candidate Normalization
+- Contract Validation
+- Acceptance Gate
+
+Objects:
+
+- `ExtractedPageText`
+- `MonsterCandidate`
+- `MonsterOccurrenceDraft`
+- `MonsterOccurrence`
+- `QuarantineRecord`

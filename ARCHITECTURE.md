@@ -159,14 +159,21 @@ The pipeline is modeled as Dagster assets:
 - `source_books`: manifest rows for each book, checksum, source id, language, ruleset,
   local path, R2 key, and extraction settings.
 - `pdf_pages`: page inventory and text/scanned triage.
-- `page_text`: text/layout extraction for pages with a usable text layer.
-- `page_ocr_text`: local OCR output for scanned or low-text pages.
-- `monster_candidates`: segmented candidate stat blocks with source page spans.
-- `parsed_monsters`: structured JSON using the current schema contract.
-- `validation_results`: accepted records, low-confidence records, and hard failures.
+- `extracted_page_text`: Text Extraction output from PDF text layer, OCR, manual
+  transcription, or approved LLM vision transcription.
+- `monster_candidates`: Candidate Segmentation output with source page spans,
+  raw private text, segmentation metadata, quality signals, and lineage.
+- `monster_occurrence_drafts`: Candidate Normalization output shaped like the current
+  schema contract but not yet trusted.
+- `validation_results`: Contract Validation output with accepted records,
+  low-confidence records, and hard failures.
+- `quarantine_records`: Acceptance Gate output for failed or review-required records.
 - `postgres_load`: idempotent loading into Postgres raw/core schemas.
 - `mart_build` and `search_refresh`: dbt/model refresh and app read-model refresh.
 - `report_build`: generated derived-metric analytics reports.
+
+See [docs/EXTRACTION_PIPELINE.md](./docs/EXTRACTION_PIPELINE.md) for the canonical
+step names, object shapes, and quarantine reprocessing loop.
 
 v1 is fully automatic in the sense that it does not require a manual review step before
 successful records move forward. Uncertain records are quarantined and excluded from
