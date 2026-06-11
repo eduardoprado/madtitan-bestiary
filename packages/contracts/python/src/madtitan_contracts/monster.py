@@ -71,6 +71,7 @@ class MovementSpeed(BaseModel):
     mode: str = "walk"
     distance: int = Field(ge=0)
     unit: str = "ft"
+    hover: bool = False
 
 
 class Initiative(BaseModel):
@@ -112,7 +113,40 @@ class Sense(BaseModel):
 class Challenge(BaseModel):
     rating: str
     xp: int | None = Field(default=None, ge=0)
+    lair_xp: int | None = Field(default=None, ge=0)
     proficiency_bonus: int | None = None
+
+
+class LegendaryResistance(BaseModel):
+    uses: int = Field(ge=0)
+    lair_uses: int | None = Field(default=None, ge=0)
+
+
+class LegendaryActionUses(BaseModel):
+    uses: int = Field(ge=0)
+    lair_uses: int | None = Field(default=None, ge=0)
+    regain_timing: str | None = None
+
+
+class SavingThrowEffect(BaseModel):
+    ability: str
+    dc: int | None = Field(default=None, ge=0)
+    success: str | None = None
+    failure: str | None = None
+
+
+class RechargeRule(BaseModel):
+    type: str
+    minimum: int | None = Field(default=None, ge=0)
+    maximum: int | None = Field(default=None, ge=0)
+    text: str | None = None
+
+
+class AreaEffect(BaseModel):
+    shape: str
+    size: int | None = Field(default=None, ge=0)
+    unit: str | None = "ft"
+    text: str | None = None
 
 
 class DamageInstance(BaseModel):
@@ -132,13 +166,30 @@ class AttackDetail(BaseModel):
     target_size_limit: str | None = None
 
 
+class FeatureOption(BaseModel):
+    label: str
+    name: str
+    text: str
+    saving_throw: SavingThrowEffect | None = None
+    damage: list[DamageInstance] = Field(default_factory=list)
+    damage_types: list[str] = Field(default_factory=list)
+    conditions_inflicted: list[str] = Field(default_factory=list)
+    metadata: dict[str, object] = Field(default_factory=dict)
+
+
 class MonsterFeature(BaseModel):
     name: str
     kind: str
     text: str
     attack: AttackDetail | None = None
+    saving_throw: SavingThrowEffect | None = None
+    recharge: RechargeRule | None = None
+    area: AreaEffect | None = None
+    damage: list[DamageInstance] = Field(default_factory=list)
     damage_types: list[str] = Field(default_factory=list)
     conditions_inflicted: list[str] = Field(default_factory=list)
+    options: list[FeatureOption] = Field(default_factory=list)
+    metadata: dict[str, object] = Field(default_factory=dict)
 
 
 class MonsterOccurrence(BaseModel):
@@ -161,9 +212,21 @@ class MonsterOccurrence(BaseModel):
     passive_perception: int | None = Field(default=None, ge=0)
     languages: list[str] = Field(default_factory=list)
     languages_text: str | None = None
+    gear: list[str] = Field(default_factory=list)
+    damage_resistances: list[str] = Field(default_factory=list)
+    damage_immunities: list[str] = Field(default_factory=list)
+    condition_immunities: list[str] = Field(default_factory=list)
     challenge: Challenge | None = None
     features: list[MonsterFeature] = Field(default_factory=list)
+    has_spellcasting: bool = False
+    has_bonus_actions: bool = False
+    bonus_actions: list[MonsterFeature] = Field(default_factory=list)
+    has_reactions: bool = False
+    reactions: list[MonsterFeature] = Field(default_factory=list)
     legendary_status: str = "ordinary"
+    legendary_resistance: LegendaryResistance | None = None
+    legendary_action_uses: LegendaryActionUses | None = None
+    has_lair_variant: bool = False
     legendary_actions: list[MonsterFeature] = Field(default_factory=list)
     lair_actions: list[MonsterFeature] = Field(default_factory=list)
     content_flags: ContentFlags = Field(default_factory=ContentFlags)

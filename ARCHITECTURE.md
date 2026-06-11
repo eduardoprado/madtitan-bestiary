@@ -481,7 +481,7 @@ Why monorepo:
 | 7 - Website         | Private faceted search UI and detail pages behind Auth.js allowlist.                                                |
 | 8 - Analytics       | Notebooks and generated derived-metric reports.                                                                     |
 | 9 - Hardening       | CI, seed data, performance checks, backup/restore notes, portfolio docs.                                            |
-| Future              | Spells, homebrew monster creation, encounter simulator, optional canonical grouping.                                |
+| Future              | Spells table/linking, homebrew monster creation, encounter simulator, optional canonical grouping.                  |
 
 ---
 

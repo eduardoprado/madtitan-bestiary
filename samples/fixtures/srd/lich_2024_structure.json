@@ -1,0 +1,342 @@
+{
+  "name": "Lich",
+  "size": "Medium",
+  "creature_type": "undead",
+  "creature_group": "wizard",
+  "alignment": "Neutral Evil",
+  "habitats": ["any"],
+  "armor_class": {
+    "value": 20,
+    "source": "non-specified"
+  },
+  "hit_points": 315,
+  "hit_point_formula": {
+    "raw": "42d8 + 126",
+    "quantity": 42,
+    "die_type": "d8",
+    "modifier": 126
+  },
+  "speeds": [
+    {
+      "mode": "walk",
+      "distance": 30,
+      "unit": "ft"
+    }
+  ],
+  "initiative": {
+    "bonus": 17,
+    "static_value": 27
+  },
+  "abilities": {
+    "str": {
+      "score": 11,
+      "modifier": 0,
+      "saving_throw": 0
+    },
+    "dex": {
+      "score": 16,
+      "modifier": 3,
+      "saving_throw": 10
+    },
+    "con": {
+      "score": 16,
+      "modifier": 3,
+      "saving_throw": 10
+    },
+    "int": {
+      "score": 21,
+      "modifier": 5,
+      "saving_throw": 12
+    },
+    "wis": {
+      "score": 14,
+      "modifier": 2,
+      "saving_throw": 9
+    },
+    "cha": {
+      "score": 16,
+      "modifier": 3,
+      "saving_throw": 3
+    }
+  },
+  "skills": [
+    {
+      "name": "Arcana",
+      "modifier": 19
+    },
+    {
+      "name": "History",
+      "modifier": 12
+    },
+    {
+      "name": "Insight",
+      "modifier": 9
+    },
+    {
+      "name": "Perception",
+      "modifier": 9
+    }
+  ],
+  "senses": [
+    {
+      "name": "Truesight",
+      "distance": 120,
+      "unit": "ft"
+    }
+  ],
+  "passive_perception": 19,
+  "languages": ["All"],
+  "languages_text": "All",
+  "gear": ["Component Pouch"],
+  "damage_resistances": ["Cold", "Lightning"],
+  "damage_immunities": ["Necrotic", "Poison"],
+  "condition_immunities": [
+    "Charmed",
+    "Exhaustion",
+    "Frightened",
+    "Paralyzed",
+    "Poisoned"
+  ],
+  "challenge": {
+    "rating": "21",
+    "xp": 33000,
+    "lair_xp": 41000,
+    "proficiency_bonus": 7
+  },
+  "features": [
+    {
+      "name": "Legendary Resistance",
+      "kind": "trait",
+      "text": "[source text omitted from public fixture]",
+      "metadata": {
+        "uses": 4,
+        "lair_uses": 5
+      }
+    },
+    {
+      "name": "Spirit Jar",
+      "kind": "trait",
+      "text": "[source text omitted from public fixture]",
+      "metadata": {
+        "reform_time_formula": {
+          "raw": "1d10",
+          "quantity": 1,
+          "die_type": "d10",
+          "modifier": 0
+        }
+      }
+    },
+    {
+      "name": "Multiattack",
+      "kind": "action",
+      "text": "[source text omitted from public fixture]",
+      "metadata": {
+        "attack_count": 3,
+        "allowed_attacks": ["Eldritch Burst", "Paralyzing Touch"]
+      }
+    },
+    {
+      "name": "Eldritch Burst",
+      "kind": "action",
+      "text": "[source text omitted from public fixture]",
+      "attack": {
+        "attack_type": "melee_or_ranged",
+        "attack_roll_bonus": 12,
+        "reach": 5,
+        "reach_unit": "ft",
+        "range_normal": 120,
+        "damage": [
+          {
+            "average": 31,
+            "formula": {
+              "raw": "4d12 + 5",
+              "quantity": 4,
+              "die_type": "d12",
+              "modifier": 5
+            },
+            "damage_type": "Force"
+          }
+        ]
+      },
+      "damage_types": ["Force"]
+    },
+    {
+      "name": "Paralyzing Touch",
+      "kind": "action",
+      "text": "[source text omitted from public fixture]",
+      "attack": {
+        "attack_type": "melee",
+        "attack_roll_bonus": 12,
+        "reach": 5,
+        "reach_unit": "ft",
+        "damage": [
+          {
+            "average": 15,
+            "formula": {
+              "raw": "3d6 + 5",
+              "quantity": 3,
+              "die_type": "d6",
+              "modifier": 5
+            },
+            "damage_type": "Cold"
+          }
+        ]
+      },
+      "damage_types": ["Cold"],
+      "conditions_inflicted": ["Paralyzed"]
+    },
+    {
+      "name": "Spellcasting",
+      "kind": "action",
+      "text": "[source text omitted from public fixture]",
+      "metadata": {
+        "spellcasting_ability": "Intelligence",
+        "spell_save_dc": 20,
+        "spell_groups": [
+          {
+            "frequency": "at_will",
+            "spells": [
+              "Detect Magic",
+              "Detect Thoughts",
+              "Dispel Magic",
+              "Fireball",
+              "Invisibility",
+              "Lightning Bolt",
+              "Mage Hand",
+              "Prestidigitation"
+            ],
+            "notes": {
+              "Fireball": "level 5 version",
+              "Lightning Bolt": "level 5 version"
+            }
+          },
+          {
+            "frequency": "2_per_day_each",
+            "spells": ["Animate Dead", "Dimension Door", "Plane Shift"]
+          },
+          {
+            "frequency": "1_per_day_each",
+            "spells": [
+              "Chain Lightning",
+              "Finger of Death",
+              "Power Word Kill",
+              "Scrying"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "has_spellcasting": true,
+  "has_bonus_actions": false,
+  "bonus_actions": [],
+  "has_reactions": true,
+  "reactions": [
+    {
+      "name": "Protective Magic",
+      "kind": "reaction",
+      "text": "[source text omitted from public fixture]",
+      "metadata": {
+        "spells": ["Counterspell", "Shield"],
+        "uses_spellcasting_ability": true
+      }
+    }
+  ],
+  "legendary_status": "legendary",
+  "legendary_resistance": {
+    "uses": 4,
+    "lair_uses": 5
+  },
+  "legendary_action_uses": {
+    "uses": 3,
+    "lair_uses": 4,
+    "regain_timing": "start_of_turn"
+  },
+  "has_lair_variant": true,
+  "legendary_actions": [
+    {
+      "name": "Deathly Teleport",
+      "kind": "legendary_action",
+      "text": "[source text omitted from public fixture]",
+      "damage": [
+        {
+          "average": 11,
+          "formula": {
+            "raw": "2d10",
+            "quantity": 2,
+            "die_type": "d10",
+            "modifier": 0
+          },
+          "damage_type": "Necrotic"
+        }
+      ],
+      "damage_types": ["Necrotic"],
+      "metadata": {
+        "teleport_distance": 60,
+        "teleport_unit": "ft",
+        "damage_radius": 10,
+        "damage_radius_unit": "ft"
+      }
+    },
+    {
+      "name": "Disrupt Life",
+      "kind": "legendary_action",
+      "text": "[source text omitted from public fixture]",
+      "saving_throw": {
+        "ability": "Constitution",
+        "dc": 20,
+        "success": "half_damage",
+        "failure": "full_damage"
+      },
+      "damage": [
+        {
+          "average": 31,
+          "formula": {
+            "raw": "9d6",
+            "quantity": 9,
+            "die_type": "d6",
+            "modifier": 0
+          },
+          "damage_type": "Necrotic"
+        }
+      ],
+      "damage_types": ["Necrotic"],
+      "metadata": {
+        "area": "20-foot Emanation",
+        "excluded_creature_type": "Undead",
+        "reuse_limit": "until_start_of_next_turn"
+      }
+    },
+    {
+      "name": "Frightening Gaze",
+      "kind": "legendary_action",
+      "text": "[source text omitted from public fixture]",
+      "metadata": {
+        "spells": ["Fear"],
+        "uses_spellcasting_ability": true,
+        "reuse_limit": "until_start_of_next_turn"
+      }
+    }
+  ],
+  "lair_actions": [],
+  "content_flags": {
+    "has_image": true,
+    "has_lore": true
+  },
+  "damage_types_dealt": ["Cold", "Force", "Necrotic"],
+  "conditions_inflicted": ["Paralyzed"],
+  "tags": ["srd-candidate", "field-inventory"],
+  "provenance": {
+    "source_id": "mm2024-p196-lich",
+    "source_title": "Monster Manual 2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "page_start": 196,
+    "page_end": 196,
+    "extraction_method": "user_transcribed_screenshot",
+    "parser_version": "contract-draft-v1"
+  },
+  "confidence": 1,
+  "source_specific_fields": {},
+  "raw_json": {}
+}

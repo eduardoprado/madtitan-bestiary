@@ -79,9 +79,11 @@
   "passive_perception": 15,
   "languages": [],
   "languages_text": "None",
+  "gear": [],
   "challenge": {
     "rating": "1",
     "xp": 200,
+    "lair_xp": null,
     "proficiency_bonus": 2
   },
   "features": [
@@ -119,7 +121,14 @@
       "conditions_inflicted": ["Prone"]
     }
   ],
+  "has_bonus_actions": false,
+  "bonus_actions": [],
+  "has_reactions": false,
+  "reactions": [],
   "legendary_status": "ordinary",
+  "legendary_resistance": null,
+  "legendary_action_uses": null,
+  "has_lair_variant": false,
   "legendary_actions": [],
   "lair_actions": [],
   "content_flags": {

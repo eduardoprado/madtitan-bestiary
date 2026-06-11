@@ -64,6 +64,56 @@
       "title": "AbilityScores",
       "type": "object"
     },
+    "AreaEffect": {
+      "properties": {
+        "shape": {
+          "title": "Shape",
+          "type": "string"
+        },
+        "size": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Size"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "ft",
+          "title": "Unit"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        }
+      },
+      "required": [
+        "shape"
+      ],
+      "title": "AreaEffect",
+      "type": "object"
+    },
     "ArmorClass": {
       "properties": {
         "value": {
@@ -202,6 +252,19 @@
           "default": null,
           "title": "Xp"
         },
+        "lair_xp": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lair Xp"
+        },
         "proficiency_bonus": {
           "anyOf": [
             {
@@ -311,6 +374,65 @@
       "title": "DiceFormula",
       "type": "object"
     },
+    "FeatureOption": {
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "saving_throw": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SavingThrowEffect"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "damage": {
+          "items": {
+            "$ref": "#/$defs/DamageInstance"
+          },
+          "title": "Damage",
+          "type": "array"
+        },
+        "damage_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Damage Types",
+          "type": "array"
+        },
+        "conditions_inflicted": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Conditions Inflicted",
+          "type": "array"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "type": "object"
+        }
+      },
+      "required": [
+        "label",
+        "name",
+        "text"
+      ],
+      "title": "FeatureOption",
+      "type": "object"
+    },
     "Initiative": {
       "properties": {
         "bonus": {
@@ -327,6 +449,72 @@
         "static_value"
       ],
       "title": "Initiative",
+      "type": "object"
+    },
+    "LegendaryActionUses": {
+      "properties": {
+        "uses": {
+          "minimum": 0,
+          "title": "Uses",
+          "type": "integer"
+        },
+        "lair_uses": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lair Uses"
+        },
+        "regain_timing": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Regain Timing"
+        }
+      },
+      "required": [
+        "uses"
+      ],
+      "title": "LegendaryActionUses",
+      "type": "object"
+    },
+    "LegendaryResistance": {
+      "properties": {
+        "uses": {
+          "minimum": 0,
+          "title": "Uses",
+          "type": "integer"
+        },
+        "lair_uses": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lair Uses"
+        }
+      },
+      "required": [
+        "uses"
+      ],
+      "title": "LegendaryResistance",
       "type": "object"
     },
     "MonsterFeature": {
@@ -354,6 +542,46 @@
           ],
           "default": null
         },
+        "saving_throw": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SavingThrowEffect"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "recharge": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RechargeRule"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "area": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AreaEffect"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "damage": {
+          "items": {
+            "$ref": "#/$defs/DamageInstance"
+          },
+          "title": "Damage",
+          "type": "array"
+        },
         "damage_types": {
           "items": {
             "type": "string"
@@ -367,6 +595,17 @@
           },
           "title": "Conditions Inflicted",
           "type": "array"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/FeatureOption"
+          },
+          "title": "Options",
+          "type": "array"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "type": "object"
         }
       },
       "required": [
@@ -394,12 +633,118 @@
           "default": "ft",
           "title": "Unit",
           "type": "string"
+        },
+        "hover": {
+          "default": false,
+          "title": "Hover",
+          "type": "boolean"
         }
       },
       "required": [
         "distance"
       ],
       "title": "MovementSpeed",
+      "type": "object"
+    },
+    "RechargeRule": {
+      "properties": {
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "minimum": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minimum"
+        },
+        "maximum": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Maximum"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "RechargeRule",
+      "type": "object"
+    },
+    "SavingThrowEffect": {
+      "properties": {
+        "ability": {
+          "title": "Ability",
+          "type": "string"
+        },
+        "dc": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dc"
+        },
+        "success": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Success"
+        },
+        "failure": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Failure"
+        }
+      },
+      "required": [
+        "ability"
+      ],
+      "title": "SavingThrowEffect",
       "type": "object"
     },
     "Sense": {
@@ -709,6 +1054,34 @@
       "default": null,
       "title": "Languages Text"
     },
+    "gear": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Gear",
+      "type": "array"
+    },
+    "damage_resistances": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Damage Resistances",
+      "type": "array"
+    },
+    "damage_immunities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Damage Immunities",
+      "type": "array"
+    },
+    "condition_immunities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Condition Immunities",
+      "type": "array"
+    },
     "challenge": {
       "anyOf": [
         {
@@ -727,10 +1100,66 @@
       "title": "Features",
       "type": "array"
     },
+    "has_spellcasting": {
+      "default": false,
+      "title": "Has Spellcasting",
+      "type": "boolean"
+    },
+    "has_bonus_actions": {
+      "default": false,
+      "title": "Has Bonus Actions",
+      "type": "boolean"
+    },
+    "bonus_actions": {
+      "items": {
+        "$ref": "#/$defs/MonsterFeature"
+      },
+      "title": "Bonus Actions",
+      "type": "array"
+    },
+    "has_reactions": {
+      "default": false,
+      "title": "Has Reactions",
+      "type": "boolean"
+    },
+    "reactions": {
+      "items": {
+        "$ref": "#/$defs/MonsterFeature"
+      },
+      "title": "Reactions",
+      "type": "array"
+    },
     "legendary_status": {
       "default": "ordinary",
       "title": "Legendary Status",
       "type": "string"
+    },
+    "legendary_resistance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LegendaryResistance"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "legendary_action_uses": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LegendaryActionUses"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "has_lair_variant": {
+      "default": false,
+      "title": "Has Lair Variant",
+      "type": "boolean"
     },
     "legendary_actions": {
       "items": {
