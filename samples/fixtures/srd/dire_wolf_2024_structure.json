@@ -1,0 +1,145 @@
+{
+  "name": "Dire Wolf",
+  "size": "Large",
+  "creature_type": "beast",
+  "creature_group": null,
+  "alignment": "Unaligned",
+  "habitats": ["forest"],
+  "armor_class": {
+    "value": 14,
+    "source": "non-specified"
+  },
+  "hit_points": 22,
+  "hit_point_formula": {
+    "raw": "3d10 + 6",
+    "quantity": 3,
+    "die_type": "d10",
+    "modifier": 6
+  },
+  "speeds": [
+    {
+      "mode": "walk",
+      "distance": 50,
+      "unit": "ft"
+    }
+  ],
+  "initiative": {
+    "bonus": 2,
+    "static_value": 12
+  },
+  "abilities": {
+    "str": {
+      "score": 17,
+      "modifier": 3,
+      "saving_throw": 3
+    },
+    "dex": {
+      "score": 15,
+      "modifier": 2,
+      "saving_throw": 2
+    },
+    "con": {
+      "score": 15,
+      "modifier": 2,
+      "saving_throw": 2
+    },
+    "int": {
+      "score": 3,
+      "modifier": -4,
+      "saving_throw": -4
+    },
+    "wis": {
+      "score": 12,
+      "modifier": 1,
+      "saving_throw": 1
+    },
+    "cha": {
+      "score": 7,
+      "modifier": -2,
+      "saving_throw": -2
+    }
+  },
+  "skills": [
+    {
+      "name": "Perception",
+      "modifier": 5
+    },
+    {
+      "name": "Stealth",
+      "modifier": 4
+    }
+  ],
+  "senses": [
+    {
+      "name": "Darkvision",
+      "distance": 60,
+      "unit": "ft"
+    }
+  ],
+  "passive_perception": 15,
+  "languages": [],
+  "languages_text": "None",
+  "challenge": {
+    "rating": "1",
+    "xp": 200,
+    "proficiency_bonus": 2
+  },
+  "features": [
+    {
+      "name": "Pack Tactics",
+      "kind": "trait",
+      "text": "[source text omitted from public fixture]",
+      "damage_types": [],
+      "conditions_inflicted": []
+    },
+    {
+      "name": "Bite",
+      "kind": "action",
+      "text": "[source text omitted from public fixture]",
+      "attack": {
+        "attack_type": "melee",
+        "attack_roll_bonus": 5,
+        "reach": 5,
+        "reach_unit": "ft",
+        "damage": [
+          {
+            "average": 8,
+            "formula": {
+              "raw": "1d10 + 3",
+              "quantity": 1,
+              "die_type": "d10",
+              "modifier": 3
+            },
+            "damage_type": "Piercing"
+          }
+        ],
+        "target_size_limit": "Large or smaller"
+      },
+      "damage_types": ["Piercing"],
+      "conditions_inflicted": ["Prone"]
+    }
+  ],
+  "legendary_status": "ordinary",
+  "legendary_actions": [],
+  "lair_actions": [],
+  "content_flags": {
+    "has_image": true,
+    "has_lore": false
+  },
+  "damage_types_dealt": ["Piercing"],
+  "conditions_inflicted": ["Prone"],
+  "tags": ["srd-candidate", "field-inventory"],
+  "provenance": {
+    "source_id": "mm2024-p352-dire-wolf",
+    "source_title": "Monster Manual 2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "page_start": 352,
+    "page_end": 352,
+    "extraction_method": "user_transcribed_screenshot",
+    "parser_version": "contract-draft-v1"
+  },
+  "confidence": 1,
+  "source_specific_fields": {},
+  "raw_json": {}
+}

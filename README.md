@@ -75,6 +75,7 @@ madtitan-bestiary/
 - **dbt warehouse:** `warehouse/`
 - **Next.js app:** `web/`
 - **Shared contracts:** `packages/contracts/`
+- **Field inventory:** [docs/FIELD_INVENTORY.md](./docs/FIELD_INVENTORY.md)
 
 ## Legal / data note
 

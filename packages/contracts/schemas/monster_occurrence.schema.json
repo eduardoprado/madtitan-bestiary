@@ -1,55 +1,517 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://madtitan.local/schemas/monster_occurrence.schema.json",
-  "title": "MonsterOccurrence",
-  "type": "object",
-  "required": ["name", "size", "creature_type", "provenance", "confidence"],
-  "properties": {
-    "name": { "type": "string", "minLength": 1 },
-    "size": { "type": "string", "minLength": 1 },
-    "creature_type": { "type": "string", "minLength": 1 },
-    "alignment": { "type": ["string", "null"] },
-    "challenge_rating": { "type": ["string", "null"] },
-    "armor_class": { "type": ["integer", "null"], "minimum": 0 },
-    "hit_points": { "type": ["integer", "null"], "minimum": 0 },
-    "abilities": {
-      "type": ["object", "null"],
-      "required": [
-        "str_score",
-        "dex_score",
-        "con_score",
-        "int_score",
-        "wis_score",
-        "cha_score"
-      ],
+  "$defs": {
+    "AbilityBlock": {
       "properties": {
-        "str_score": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "dex_score": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "con_score": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "int_score": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "wis_score": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "cha_score": { "type": "integer", "minimum": 1, "maximum": 30 }
-      }
-    },
-    "features": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["name", "kind", "text"],
-        "properties": {
-          "name": { "type": "string" },
-          "kind": { "type": "string" },
-          "text": { "type": "string" }
+        "score": {
+          "maximum": 30,
+          "minimum": 1,
+          "title": "Score",
+          "type": "integer"
+        },
+        "modifier": {
+          "title": "Modifier",
+          "type": "integer"
+        },
+        "saving_throw": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Saving Throw"
         }
-      }
+      },
+      "required": [
+        "score",
+        "modifier"
+      ],
+      "title": "AbilityBlock",
+      "type": "object"
     },
-    "tags": {
-      "type": "array",
-      "items": { "type": "string" }
+    "AbilityScores": {
+      "properties": {
+        "str": {
+          "$ref": "#/$defs/AbilityBlock"
+        },
+        "dex": {
+          "$ref": "#/$defs/AbilityBlock"
+        },
+        "con": {
+          "$ref": "#/$defs/AbilityBlock"
+        },
+        "int": {
+          "$ref": "#/$defs/AbilityBlock"
+        },
+        "wis": {
+          "$ref": "#/$defs/AbilityBlock"
+        },
+        "cha": {
+          "$ref": "#/$defs/AbilityBlock"
+        }
+      },
+      "required": [
+        "str",
+        "dex",
+        "con",
+        "int",
+        "wis",
+        "cha"
+      ],
+      "title": "AbilityScores",
+      "type": "object"
     },
-    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
-    "provenance": {
-      "type": "object",
+    "ArmorClass": {
+      "properties": {
+        "value": {
+          "minimum": 0,
+          "title": "Value",
+          "type": "integer"
+        },
+        "source": {
+          "default": "non-specified",
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ArmorClass",
+      "type": "object"
+    },
+    "AttackDetail": {
+      "properties": {
+        "attack_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Attack Type"
+        },
+        "attack_roll_bonus": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Attack Roll Bonus"
+        },
+        "reach": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reach"
+        },
+        "reach_unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "ft",
+          "title": "Reach Unit"
+        },
+        "range_normal": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Range Normal"
+        },
+        "range_long": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Range Long"
+        },
+        "damage": {
+          "items": {
+            "$ref": "#/$defs/DamageInstance"
+          },
+          "title": "Damage",
+          "type": "array"
+        },
+        "target_size_limit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Size Limit"
+        }
+      },
+      "title": "AttackDetail",
+      "type": "object"
+    },
+    "Challenge": {
+      "properties": {
+        "rating": {
+          "title": "Rating",
+          "type": "string"
+        },
+        "xp": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Xp"
+        },
+        "proficiency_bonus": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Proficiency Bonus"
+        }
+      },
+      "required": [
+        "rating"
+      ],
+      "title": "Challenge",
+      "type": "object"
+    },
+    "ContentFlags": {
+      "description": "Source-page content flags useful for private UI and extraction QA.",
+      "properties": {
+        "has_image": {
+          "default": false,
+          "title": "Has Image",
+          "type": "boolean"
+        },
+        "has_lore": {
+          "default": false,
+          "title": "Has Lore",
+          "type": "boolean"
+        }
+      },
+      "title": "ContentFlags",
+      "type": "object"
+    },
+    "DamageInstance": {
+      "properties": {
+        "average": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Average"
+        },
+        "formula": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DiceFormula"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "damage_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Damage Type"
+        }
+      },
+      "title": "DamageInstance",
+      "type": "object"
+    },
+    "DiceFormula": {
+      "description": "Parsed dice expression such as 3d10+6.",
+      "properties": {
+        "raw": {
+          "title": "Raw",
+          "type": "string"
+        },
+        "quantity": {
+          "minimum": 0,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "die_type": {
+          "pattern": "^d\\d+$",
+          "title": "Die Type",
+          "type": "string"
+        },
+        "modifier": {
+          "default": 0,
+          "title": "Modifier",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "raw",
+        "quantity",
+        "die_type"
+      ],
+      "title": "DiceFormula",
+      "type": "object"
+    },
+    "Initiative": {
+      "properties": {
+        "bonus": {
+          "title": "Bonus",
+          "type": "integer"
+        },
+        "static_value": {
+          "title": "Static Value",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "bonus",
+        "static_value"
+      ],
+      "title": "Initiative",
+      "type": "object"
+    },
+    "MonsterFeature": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "attack": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AttackDetail"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "damage_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Damage Types",
+          "type": "array"
+        },
+        "conditions_inflicted": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Conditions Inflicted",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "kind",
+        "text"
+      ],
+      "title": "MonsterFeature",
+      "type": "object"
+    },
+    "MovementSpeed": {
+      "description": "A speed entry. Unlabeled stat-block speed should use mode='walk'.",
+      "properties": {
+        "mode": {
+          "default": "walk",
+          "title": "Mode",
+          "type": "string"
+        },
+        "distance": {
+          "minimum": 0,
+          "title": "Distance",
+          "type": "integer"
+        },
+        "unit": {
+          "default": "ft",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "distance"
+      ],
+      "title": "MovementSpeed",
+      "type": "object"
+    },
+    "Sense": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "distance": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Distance"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "ft",
+          "title": "Unit"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Sense",
+      "type": "object"
+    },
+    "SkillBonus": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "modifier": {
+          "title": "Modifier",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "modifier"
+      ],
+      "title": "SkillBonus",
+      "type": "object"
+    },
+    "SourceProvenance": {
+      "description": "Where this monster occurrence came from.",
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_title": {
+          "title": "Source Title",
+          "type": "string"
+        },
+        "book_title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Book Title"
+        },
+        "ruleset": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ruleset"
+        },
+        "page_start": {
+          "minimum": 1,
+          "title": "Page Start",
+          "type": "integer"
+        },
+        "page_end": {
+          "minimum": 1,
+          "title": "Page End",
+          "type": "integer"
+        },
+        "extraction_method": {
+          "title": "Extraction Method",
+          "type": "string"
+        },
+        "parser_version": {
+          "title": "Parser Version",
+          "type": "string"
+        }
+      },
       "required": [
         "source_id",
         "source_title",
@@ -58,15 +520,283 @@
         "extraction_method",
         "parser_version"
       ],
-      "properties": {
-        "source_id": { "type": "string" },
-        "source_title": { "type": "string" },
-        "page_start": { "type": "integer", "minimum": 1 },
-        "page_end": { "type": "integer", "minimum": 1 },
-        "extraction_method": { "type": "string" },
-        "parser_version": { "type": "string" }
-      }
+      "title": "SourceProvenance",
+      "type": "object"
+    }
+  },
+  "description": "Draft parser contract for one source-specific monster occurrence.",
+  "properties": {
+    "name": {
+      "title": "Name",
+      "type": "string"
     },
-    "raw_json": { "type": "object" }
-  }
+    "size": {
+      "title": "Size",
+      "type": "string"
+    },
+    "creature_type": {
+      "enum": [
+        "aberration",
+        "beast",
+        "celestial",
+        "construct",
+        "dragon",
+        "elemental",
+        "fey",
+        "fiend",
+        "giant",
+        "humanoid",
+        "monstrosity",
+        "ooze",
+        "plant",
+        "undead"
+      ],
+      "title": "Creature Type",
+      "type": "string"
+    },
+    "creature_group": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Creature Group"
+    },
+    "alignment": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Alignment"
+    },
+    "habitats": {
+      "items": {
+        "enum": [
+          "any",
+          "arctic",
+          "coastal",
+          "desert",
+          "forest",
+          "grassland",
+          "hill",
+          "mountain",
+          "swamp",
+          "underdark",
+          "underwater",
+          "urban"
+        ],
+        "type": "string"
+      },
+      "title": "Habitats",
+      "type": "array"
+    },
+    "armor_class": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArmorClass"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "hit_points": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Hit Points"
+    },
+    "hit_point_formula": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DiceFormula"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "speeds": {
+      "items": {
+        "$ref": "#/$defs/MovementSpeed"
+      },
+      "title": "Speeds",
+      "type": "array"
+    },
+    "initiative": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Initiative"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "abilities": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AbilityScores"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "skills": {
+      "items": {
+        "$ref": "#/$defs/SkillBonus"
+      },
+      "title": "Skills",
+      "type": "array"
+    },
+    "senses": {
+      "items": {
+        "$ref": "#/$defs/Sense"
+      },
+      "title": "Senses",
+      "type": "array"
+    },
+    "passive_perception": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Passive Perception"
+    },
+    "languages": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Languages",
+      "type": "array"
+    },
+    "languages_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Languages Text"
+    },
+    "challenge": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Challenge"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "features": {
+      "items": {
+        "$ref": "#/$defs/MonsterFeature"
+      },
+      "title": "Features",
+      "type": "array"
+    },
+    "legendary_status": {
+      "default": "ordinary",
+      "title": "Legendary Status",
+      "type": "string"
+    },
+    "legendary_actions": {
+      "items": {
+        "$ref": "#/$defs/MonsterFeature"
+      },
+      "title": "Legendary Actions",
+      "type": "array"
+    },
+    "lair_actions": {
+      "items": {
+        "$ref": "#/$defs/MonsterFeature"
+      },
+      "title": "Lair Actions",
+      "type": "array"
+    },
+    "content_flags": {
+      "$ref": "#/$defs/ContentFlags"
+    },
+    "damage_types_dealt": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Damage Types Dealt",
+      "type": "array"
+    },
+    "conditions_inflicted": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Conditions Inflicted",
+      "type": "array"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array"
+    },
+    "provenance": {
+      "$ref": "#/$defs/SourceProvenance"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "source_specific_fields": {
+      "title": "Source Specific Fields",
+      "type": "object"
+    },
+    "raw_json": {
+      "title": "Raw Json",
+      "type": "object"
+    }
+  },
+  "required": [
+    "name",
+    "size",
+    "creature_type",
+    "provenance",
+    "confidence"
+  ],
+  "title": "MonsterOccurrence",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://madtitan.local/schemas/monster_occurrence.schema.json"
 }

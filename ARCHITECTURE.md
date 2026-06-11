@@ -27,7 +27,7 @@
 - Public distribution of extracted copyrighted data.
 - Spells, monster creation, encounter simulator, favorites, compare views, or random
   generators.
-- Hosted AI extraction by default.
+- Uncontrolled or unaudited hosted AI extraction by default.
 - A separate cloud lakehouse or managed data warehouse. Postgres is the v1 warehouse,
   serving database, and search database.
 
@@ -37,7 +37,7 @@
 | ------------------------- | -------------------------------------------------------------------------------------- |
 | Low monthly cost          | Prefer free tiers, local compute, and a small cloud footprint.                         |
 | Private data, public code | Raw PDFs, extracted text, exports, and secrets never enter Git.                        |
-| Private-first extraction  | OCR/parsing runs locally first; uncertain records are quarantined.                     |
+| Private-first extraction  | Local parsing/OCR runs first; LLM help is explicit, audited, and quarantined.          |
 | Portfolio-grade stack     | Use Dagster, typed contracts, dbt, quality checks, faceting metadata, and strong docs. |
 | Extensible                | Future domains add schemas/models, not a new platform.                                 |
 
@@ -57,7 +57,7 @@ v1 is **Postgres-exclusive plus Dagster/private-first extraction**.
 This deliberately replaces the previous Databricks/Gemini-first design:
 
 - No Databricks in the critical path for v1.
-- No hosted AI extraction in the default v1 pipeline.
+- No uncontrolled hosted AI extraction in the default v1 pipeline.
 - No separate FastAPI service unless the Next.js API surface becomes too large.
 - No Cloudflare Access requirement until a custom domain is available.
 
@@ -125,7 +125,8 @@ flowchart TD
 | Raw storage      | Cloudflare R2 private bucket + local mirror | Free/low-cost storage | Keeps PDFs out of repo; local mirror keeps extraction cheap.                |
 | Orchestration    | Dagster OSS                                 | Free, local           | Asset lineage, retries, partitions, checks, and portfolio-grade visibility. |
 | PDF conversion   | Docling, PyMuPDF, pdfplumber                | Free, local           | Layout-aware extraction plus targeted fallback control.                     |
-| OCR              | OCRmyPDF/Tesseract or equivalent local OCR  | Free, local           | Handles scanned pages without sending page images to third parties.         |
+| OCR              | OCRmyPDF/Tesseract or equivalent local OCR  | Free, local           | Handles scanned pages before any LLM-assisted fallback is considered.       |
+| LLM assist       | Local or explicitly approved hosted model   | Controlled/optional   | Converts broken OCR/page images into structured text when local tools fail. |
 | Validation       | Pydantic v2                                 | Free                  | Shared schema contract and quarantine boundaries.                           |
 | Warehouse/search | Postgres, likely Neon Free for v1           | Free tier first       | One trusted database for warehouse, app, and search.                        |
 | Modeling         | dbt Core with Postgres adapter              | Free                  | Versioned SQL models, docs, and quality tests.                              |
@@ -139,7 +140,7 @@ Optional later upgrades:
 
 - Cloudflare Access when a custom domain exists.
 - A dedicated search engine if Postgres stops being enough.
-- A hosted or local LLM repair parser behind an explicit feature flag.
+- A hosted or local LLM extraction/repair path behind explicit privacy controls.
 - A separate FastAPI service if API complexity grows.
 - A lakehouse/Databricks layer only after privacy and data-sharing policy is settled.
 
@@ -222,24 +223,27 @@ Initial report families:
 
 ## 6. Extraction privacy and AI policy
 
-v1 does not send raw PDFs, page images, extracted text, or copyrighted lore to hosted AI
-services.
+v1 starts with local parsing and local OCR. Some PDFs may have missing or broken OCR, so
+the architecture also allows an explicit LLM-assisted extraction path for selected
+pages or candidates. That path must be configured intentionally, logged, and treated as
+a privacy-sensitive operation.
 
 Allowed in v1:
 
 - Local PDF parsing.
 - Local OCR.
 - Deterministic or heuristic stat-block parsing.
+- LLM-assisted text conversion or repair for selected failed pages/candidates, when
+  explicitly enabled.
 - Pydantic validation and confidence scoring.
 - Synthetic/SRD fixtures for public tests.
 
 Deferred and feature-flagged:
 
-- Hosted AI repair parser for selected failed candidates.
-- Local LLM repair parser for ambiguous records.
-- Any provider-specific AI extraction workflow.
+- Provider-specific hosted AI workflows beyond the first approved extraction path.
+- Automated bulk AI submission without per-source policy and audit logging.
 
-If an AI repair path is added later, the docs must define:
+Before any LLM-assisted path is used, the docs must define:
 
 - Which fields may be sent.
 - Whether lore/flavor text is excluded.
@@ -469,13 +473,14 @@ Why monorepo:
 | ------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | 0 - Foundations     | Monorepo scaffold, secrets policy, sample fixtures, Postgres, R2, Dagster project, and first schema contract draft. |
 | 1 - Field inventory | Review representative books and define the first extraction contract, keeping the model provisional.                |
-| 2 - Extraction MVP  | One text-based book through local parsing, Pydantic validation, quarantine, and Postgres raw/core load.             |
+| 2 - Extraction MVP  | One text-based source through local parsing, Pydantic validation, quarantine, and Postgres raw/core load.           |
 | 3 - OCR path        | Add scanned-page triage and local OCR for mixed PDFs.                                                               |
-| 4 - Modeling        | dbt raw/core/mart/app models, data tests, docs, and accepted-only read models.                                      |
-| 5 - Search API      | Next.js API routes for search, detail, and facets using Postgres indexes.                                           |
-| 6 - Website         | Private faceted search UI and detail pages behind Auth.js allowlist.                                                |
-| 7 - Analytics       | Notebooks and generated derived-metric reports.                                                                     |
-| 8 - Hardening       | CI, seed data, performance checks, backup/restore notes, portfolio docs.                                            |
+| 4 - LLM fallback    | Add explicit, audited LLM-assisted conversion/repair for failed pages or candidates.                                |
+| 5 - Modeling        | dbt raw/core/mart/app models, data tests, docs, and accepted-only read models.                                      |
+| 6 - Search API      | Next.js API routes for search, detail, and facets using Postgres indexes.                                           |
+| 7 - Website         | Private faceted search UI and detail pages behind Auth.js allowlist.                                                |
+| 8 - Analytics       | Notebooks and generated derived-metric reports.                                                                     |
+| 9 - Hardening       | CI, seed data, performance checks, backup/restore notes, portfolio docs.                                            |
 | Future              | Spells, homebrew monster creation, encounter simulator, optional canonical grouping.                                |
 
 ---
