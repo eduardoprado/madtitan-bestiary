@@ -37,6 +37,48 @@ field, the final occurrence can still include:
 Later enrichment scripts can infer or assign this value without changing the base
 monster contract.
 
+## Inference Standards
+
+Some sources provide only part of a field group. The inference layer can fill values
+that are mechanically derived from provided stat-block information before the
+acceptance policy decides whether to quarantine a draft.
+
+Ability score and modifier conversion:
+
+| Score | Modifier |
+| --- | --- |
+| 1 | -5 |
+| 2-3 | -4 |
+| 4-5 | -3 |
+| 6-7 | -2 |
+| 8-9 | -1 |
+| 10-11 | +0 |
+| 12-13 | +1 |
+| 14-15 | +2 |
+| 16-17 | +3 |
+| 18-19 | +4 |
+| 20-21 | +5 |
+| 22-23 | +6 |
+| 24-25 | +7 |
+| 26-27 | +8 |
+| 28-29 | +9 |
+| 30 | +10 |
+
+Rules:
+
+- If an ability score is provided but the modifier is missing, infer the modifier from
+  the score.
+- If an ability modifier is provided but the score is missing, infer the lowest score
+  in that modifier's range so the value is deterministic and reviewable.
+- If a saving throw is missing, default it to the ability modifier. If provided, keep
+  the provided value because it may include proficiency or another source-specific
+  bonus.
+- If initiative is missing and Dexterity modifier is known, infer initiative bonus from
+  the Dexterity modifier and static initiative as `10 + bonus`.
+- `alignment` defaults to `not_provided` when absent.
+- `habitats` defaults to an empty list, meaning habitat has not been defined or
+  enriched yet.
+
 ## Dire Wolf - Monster Manual 2024, page 352
 
 Source/provenance fields identified:

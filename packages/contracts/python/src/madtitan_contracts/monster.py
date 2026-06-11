@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 CreatureType = Literal[
@@ -100,6 +100,12 @@ class AbilityBlock(BaseModel):
     score: int = Field(ge=1, le=30)
     modifier: int
     saving_throw: int | None = None
+
+    @model_validator(mode="after")
+    def default_saving_throw(self) -> "AbilityBlock":
+        if self.saving_throw is None:
+            self.saving_throw = self.modifier
+        return self
 
 
 class AbilityScores(BaseModel):
@@ -211,7 +217,7 @@ class MonsterOccurrence(BaseModel):
     size: str
     creature_type: CreatureType
     creature_group: str | None = None
-    alignment: str | None = None
+    alignment: str = "not_provided"
     habitats: list[Habitat] = Field(default_factory=list)
     armor_class: ArmorClass | None = None
     hit_points: int | None = Field(default=None, ge=0)

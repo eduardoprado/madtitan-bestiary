@@ -10,6 +10,7 @@ PDF
 -> Text Extraction
 -> Candidate Segmentation
 -> Candidate Normalization
+-> Inference and Enrichment
 -> Contract Validation
 -> Acceptance Gate
 -> MonsterOccurrence or QuarantineRecord
@@ -84,7 +85,48 @@ Source-specific fields follow a promotion path during normalization:
 - Promote to a top-level typed field only after the concept becomes common enough for
   core validation, app filtering, or analytics.
 
-### 4. Contract Validation
+### 4. Inference and Enrichment
+
+Input: `MonsterOccurrenceDraft`.
+
+Output: enriched `MonsterOccurrenceDraft`.
+
+Before a draft is quarantined, the pipeline gets one chance to fill mechanically
+derived fields from information that was actually present in the stat block or parser
+payload. This layer should stay conservative: it must not invent uncertain facts.
+
+Current inferred fields include:
+
+- `challenge.proficiency_bonus`, when challenge rating is present.
+- ability modifiers, when ability scores are present.
+- ability scores, when only modifiers are present. Because a modifier maps to a score
+  range, the current deterministic default is the lowest score in that range.
+- ability saving throws, when no explicit saving throw value is present. The default
+  saving throw equals the ability modifier.
+- `initiative`, when no explicit initiative is present and Dexterity modifier is
+  available. The inferred bonus equals the Dexterity modifier and the static value is
+  `10 + bonus`.
+- `has_bonus_actions`, when bonus action records are present.
+- `has_reactions`, when reaction records are present.
+- `legendary_status`, when legendary actions, action uses, or resistance are present.
+- `has_lair_variant`, when lair XP, lair action data, or lair-specific uses are
+  present.
+- `damage_types_dealt` and `conditions_inflicted`, when direct feature/action records
+  provide those values.
+- `raw_json`, when candidate structured fields exist but the draft did not preserve
+  the raw parser payload.
+
+Inference warnings are stored on the draft normalization metadata so later review can
+see which values were copied or derived.
+
+Default values that do not need policy checks:
+
+- `alignment` defaults to `not_provided`.
+- `habitats` defaults to an empty list, which means habitat is not defined yet.
+- empty optional sections such as `bonus_actions`, `reactions`, `legendary_actions`,
+  and `lair_actions` default to empty lists.
+
+### 5. Contract Validation
 
 Input: `MonsterOccurrenceDraft`.
 
@@ -93,7 +135,7 @@ Output: either a valid `MonsterOccurrence` or validation errors.
 This step validates the draft against the Pydantic `MonsterOccurrence` contract. The
 fixture validator CLI is the first implementation of this check.
 
-### 5. Acceptance Gate
+### 6. Acceptance Gate
 
 Input: validation result plus candidate and provenance metadata.
 
@@ -106,6 +148,25 @@ Output:
 The acceptance gate is the boundary between raw/private extraction work and the clean
 dataset used by app/search/analytics models.
 
+The default `AcceptancePolicy` is stricter than the base Pydantic contract. It requires:
+
+- `name`
+- `size`
+- `creature_type`
+- `armor_class`
+- `hit_points`
+- at least one speed
+- `abilities`
+- `challenge.rating`
+- `challenge.proficiency_bonus`
+- at least one action-style section: action, bonus action, reaction, legendary action,
+  or lair action
+- `provenance`
+- non-empty `raw_json`
+
+Challenge XP and lair XP are useful when provided, but they are not currently required
+for acceptance.
+
 ## Flow Chart
 
 ```mermaid
@@ -115,14 +176,15 @@ flowchart TD
     TEX["1. Text Extraction<br/>ExtractedPageText"]
     SEG["2. Candidate Segmentation<br/>MonsterCandidate"]
     NOR["3. Candidate Normalization<br/>MonsterOccurrenceDraft"]
-    VAL["4. Contract Validation"]
-    GATE["5. Acceptance Gate"]
+    INF["4. Inference and Enrichment<br/>derived draft fields"]
+    VAL["5. Contract Validation"]
+    GATE["6. Acceptance Gate"]
 
     MON["Accepted MonsterOccurrence<br/>clean dataset"]
     QUAR["QuarantineRecord<br/>debug/review/repair"]
     REPAIR["Repair / Reprocess<br/>manual edits, parser improvement,<br/>OCR retry, or LLM-assisted repair"]
 
-    PDF --> TEX --> SEG --> NOR --> VAL --> GATE
+    PDF --> TEX --> SEG --> NOR --> INF --> VAL --> GATE
     GATE -->|valid + acceptable confidence| MON
     GATE -->|invalid, incomplete, low confidence| QUAR
     QUAR --> REPAIR
@@ -344,8 +406,9 @@ Current implementation:
   `candidate.structured_fields` can satisfy the monster contract.
 - It returns a `QuarantineRecord` when structured fields are missing or contract
   validation fails.
-- `accept_draft(draft)` returns a clean `MonsterOccurrence` or a `QuarantineRecord`
-  when the draft is invalid or below the configured confidence threshold.
+- `accept_draft(draft)` runs inference, validates the draft contract, applies the
+  `AcceptancePolicy`, and then returns a clean `MonsterOccurrence` or a
+  `QuarantineRecord`.
 
 ### QuarantineRecord
 

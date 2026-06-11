@@ -9,13 +9,20 @@ from madtitan_contracts.candidate import MonsterCandidate
 from madtitan_contracts.draft import (
     MonsterOccurrenceDraft,
     NormalizationMetadata,
+    NormalizationWarning,
     QuarantineAudit,
     QuarantineError,
     QuarantineRecord,
     QuarantineRepair,
     QuarantineSource,
 )
+from madtitan_contracts.inference import infer_monster_payload
 from madtitan_contracts.monster import MonsterOccurrence, SourceProvenance
+from madtitan_contracts.policy import (
+    DEFAULT_ACCEPTANCE_POLICY,
+    AcceptancePolicy,
+    acceptance_reason,
+)
 
 
 DEFAULT_NORMALIZER_VERSION = "normalizer-v0.1.0"
@@ -62,6 +69,10 @@ def normalize_candidate(
         _provenance_from_candidate(candidate, normalizer_version).model_dump(mode="json"),
     )
     monster_payload.setdefault("confidence", candidate.quality.confidence)
+    monster_payload, inference_warnings = infer_monster_payload(
+        monster_payload,
+        raw_json_fallback={"structured_fields": candidate.candidate.structured_fields},
+    )
 
     draft = MonsterOccurrenceDraft(
         draft_id=f"{candidate.candidate_id}-draft-v1",
@@ -71,7 +82,7 @@ def normalize_candidate(
             normalizer_version=normalizer_version,
             run_id=normalization_run_id,
             confidence=candidate.quality.confidence,
-            warnings=[],
+            warnings=inference_warnings,
         ),
         monster=monster_payload,
     )
@@ -97,11 +108,14 @@ def accept_draft(
     *,
     candidate: MonsterCandidate | None = None,
     min_confidence: float = 0,
+    policy: AcceptancePolicy | None = None,
     created_at: str | None = None,
 ) -> MonsterOccurrence | QuarantineRecord:
     """Validate a draft and return the accepted occurrence or a quarantine record."""
 
     timestamp = created_at or _utc_now()
+    acceptance_policy = policy or DEFAULT_ACCEPTANCE_POLICY
+    min_confidence = max(min_confidence, acceptance_policy.min_confidence)
 
     if draft.normalization.confidence < min_confidence:
         return _quarantine(
@@ -123,8 +137,10 @@ def accept_draft(
             eligible_for_llm_repair=False,
         )
 
+    draft = _draft_with_inference(draft)
+
     try:
-        return MonsterOccurrence.model_validate(draft.monster)
+        monster = MonsterOccurrence.model_validate(draft.monster)
     except ValidationError as error:
         return _quarantine(
             candidate=candidate,
@@ -135,6 +151,48 @@ def accept_draft(
             created_at=timestamp,
             eligible_for_llm_repair=True,
         )
+
+    policy_errors = acceptance_policy.evaluate(monster, raw_payload=draft.monster)
+    if policy_errors:
+        return _quarantine(
+            candidate=candidate,
+            draft=draft,
+            reason=acceptance_reason(policy_errors),
+            errors=policy_errors,
+            parser_version=draft.normalization.normalizer_version,
+            created_at=timestamp,
+            eligible_for_llm_repair=False,
+        )
+
+    return monster
+
+
+def _draft_with_inference(draft: MonsterOccurrenceDraft) -> MonsterOccurrenceDraft:
+    inferred_payload, inference_warnings = infer_monster_payload(draft.monster)
+    if not inference_warnings:
+        return draft
+
+    return draft.model_copy(
+        update={
+            "normalization": draft.normalization.model_copy(
+                update={
+                    "warnings": [
+                        *draft.normalization.warnings,
+                        *_dedupe_warnings(draft.normalization.warnings, inference_warnings),
+                    ]
+                }
+            ),
+            "monster": inferred_payload,
+        }
+    )
+
+
+def _dedupe_warnings(
+    existing: list[NormalizationWarning],
+    incoming: list[NormalizationWarning],
+) -> list[NormalizationWarning]:
+    existing_codes = {warning.code for warning in existing}
+    return [warning for warning in incoming if warning.code not in existing_codes]
 
 
 def _provenance_from_candidate(

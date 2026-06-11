@@ -1,0 +1,53 @@
+{
+  "description": "Project-level completeness checks for accepting a monster occurrence.",
+  "properties": {
+    "required_top_level_fields": {
+      "default": [
+        "name",
+        "size",
+        "creature_type",
+        "armor_class",
+        "hit_points",
+        "speeds",
+        "abilities",
+        "challenge",
+        "provenance",
+        "raw_json"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Top Level Fields",
+      "type": "array"
+    },
+    "require_combat_actions": {
+      "default": true,
+      "title": "Require Combat Actions",
+      "type": "boolean"
+    },
+    "require_challenge_rating": {
+      "default": true,
+      "title": "Require Challenge Rating",
+      "type": "boolean"
+    },
+    "require_challenge_proficiency_bonus": {
+      "default": true,
+      "title": "Require Challenge Proficiency Bonus",
+      "type": "boolean"
+    },
+    "require_non_empty_raw_json": {
+      "default": true,
+      "title": "Require Non Empty Raw Json",
+      "type": "boolean"
+    },
+    "min_confidence": {
+      "default": 0,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Min Confidence",
+      "type": "number"
+    }
+  },
+  "title": "AcceptancePolicy",
+  "type": "object"
+}

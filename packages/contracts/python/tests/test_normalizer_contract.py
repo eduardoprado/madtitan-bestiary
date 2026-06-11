@@ -17,6 +17,7 @@ def test_normalize_candidate_creates_valid_draft_from_structured_fields() -> Non
     assert result.monster["name"] == "Dire Wolf"
     assert result.monster["provenance"]["source_id"] == "monster-manual-2024"
     assert result.monster["provenance"]["page_start"] == 352
+    assert result.monster["raw_json"]["structured_fields"]["name"] == "Dire Wolf"
 
 
 def test_accept_draft_returns_monster_occurrence() -> None:
@@ -29,6 +30,87 @@ def test_accept_draft_returns_monster_occurrence() -> None:
     assert isinstance(result, MonsterOccurrence)
     assert result.name == "Dire Wolf"
     assert result.creature_type == "beast"
+    assert result.raw_json["structured_fields"]["name"] == "Dire Wolf"
+
+
+def test_accept_draft_infers_challenge_proficiency_bonus_from_rating() -> None:
+    payload = _dire_wolf_payload()
+    assert isinstance(payload["challenge"], dict)
+    payload["challenge"].pop("proficiency_bonus")
+    candidate = _candidate_with_structured_fields(payload)
+
+    draft = normalize_candidate(candidate, created_at="2026-06-11T05:30:00Z")
+    assert isinstance(draft, MonsterOccurrenceDraft)
+    result = accept_draft(draft, candidate=candidate)
+
+    assert isinstance(result, MonsterOccurrence)
+    assert result.challenge is not None
+    assert result.challenge.proficiency_bonus == 2
+    assert any(
+        warning.code == "inferred_challenge_proficiency_bonus"
+        for warning in draft.normalization.warnings
+    )
+
+
+def test_accept_draft_infers_ability_modifiers_saves_and_initiative_from_scores() -> None:
+    payload = _dire_wolf_payload()
+    payload.pop("initiative")
+    for ability in payload["abilities"].values():
+        ability.pop("modifier")
+        ability.pop("saving_throw")
+    candidate = _candidate_with_structured_fields(payload)
+
+    draft = normalize_candidate(candidate, created_at="2026-06-11T05:30:00Z")
+    assert isinstance(draft, MonsterOccurrenceDraft)
+    result = accept_draft(draft, candidate=candidate)
+
+    assert isinstance(result, MonsterOccurrence)
+    assert result.abilities is not None
+    assert result.abilities.str_.modifier == 3
+    assert result.abilities.str_.saving_throw == 3
+    assert result.abilities.dex.modifier == 2
+    assert result.abilities.dex.saving_throw == 2
+    assert result.initiative is not None
+    assert result.initiative.bonus == 2
+    assert result.initiative.static_value == 12
+    assert any(warning.code == "inferred_dex_modifier" for warning in draft.normalization.warnings)
+    assert any(warning.code == "inferred_initiative" for warning in draft.normalization.warnings)
+
+
+def test_accept_draft_infers_lowest_ability_scores_from_modifiers() -> None:
+    payload = _dire_wolf_payload()
+    payload.pop("initiative")
+    for ability in payload["abilities"].values():
+        ability.pop("score")
+        ability.pop("saving_throw")
+    candidate = _candidate_with_structured_fields(payload)
+
+    draft = normalize_candidate(candidate, created_at="2026-06-11T05:30:00Z")
+    assert isinstance(draft, MonsterOccurrenceDraft)
+    result = accept_draft(draft, candidate=candidate)
+
+    assert isinstance(result, MonsterOccurrence)
+    assert result.abilities is not None
+    assert result.abilities.str_.score == 16
+    assert result.abilities.dex.score == 14
+    assert result.abilities.int_.score == 2
+    assert result.abilities.cha.score == 6
+    assert result.initiative is not None
+    assert result.initiative.static_value == 12
+    assert any(warning.code == "inferred_str_score" for warning in draft.normalization.warnings)
+
+
+def test_accept_draft_defaults_alignment_when_not_provided() -> None:
+    payload = _dire_wolf_payload()
+    payload.pop("alignment")
+    candidate = _candidate_with_structured_fields(payload)
+
+    draft = normalize_candidate(candidate, created_at="2026-06-11T05:30:00Z")
+    assert isinstance(draft, MonsterOccurrenceDraft)
+    result = accept_draft(draft, candidate=candidate)
+
+    assert isinstance(result, MonsterOccurrence)
+    assert result.alignment == "not_provided"
 
 
 def test_normalize_candidate_quarantines_missing_required_fields() -> None:
@@ -44,6 +126,51 @@ def test_normalize_candidate_quarantines_missing_required_fields() -> None:
     assert any(error.path == "name" for error in result.errors)
     assert result.draft_payload["creature_type"] == "beast"
     assert result.repair.eligible_for_manual_review is True
+
+
+def test_accept_draft_quarantines_valid_contract_without_challenge() -> None:
+    payload = _dire_wolf_payload()
+    payload.pop("challenge")
+    candidate = _candidate_with_structured_fields(payload)
+    draft = normalize_candidate(candidate, created_at="2026-06-11T05:30:00Z")
+
+    assert isinstance(draft, MonsterOccurrenceDraft)
+    result = accept_draft(draft, candidate=candidate, created_at="2026-06-11T05:31:00Z")
+
+    assert isinstance(result, QuarantineRecord)
+    assert result.reason == "missing_required_field"
+    assert any(error.path == "challenge" for error in result.errors)
+
+
+def test_accept_draft_quarantines_valid_contract_without_combat_actions() -> None:
+    payload = _dire_wolf_payload()
+    payload["features"] = [
+        feature
+        for feature in payload["features"]
+        if isinstance(feature, dict) and feature.get("kind") == "trait"
+    ]
+    candidate = _candidate_with_structured_fields(payload)
+    draft = normalize_candidate(candidate, created_at="2026-06-11T05:30:00Z")
+
+    assert isinstance(draft, MonsterOccurrenceDraft)
+    result = accept_draft(draft, candidate=candidate, created_at="2026-06-11T05:31:00Z")
+
+    assert isinstance(result, QuarantineRecord)
+    assert result.reason == "missing_combat_actions"
+    assert result.errors[0].code == "missing_combat_actions"
+
+
+def test_accept_draft_quarantines_valid_contract_without_raw_json() -> None:
+    candidate = _candidate_with_structured_fields(_dire_wolf_payload())
+    draft = normalize_candidate(candidate, created_at="2026-06-11T05:30:00Z")
+
+    assert isinstance(draft, MonsterOccurrenceDraft)
+    draft.monster["raw_json"] = {}
+    result = accept_draft(draft, candidate=candidate, created_at="2026-06-11T05:31:00Z")
+
+    assert isinstance(result, QuarantineRecord)
+    assert result.reason == "missing_required_field"
+    assert any(error.path == "raw_json" for error in result.errors)
 
 
 def test_normalize_candidate_quarantines_candidate_without_structured_fields() -> None:

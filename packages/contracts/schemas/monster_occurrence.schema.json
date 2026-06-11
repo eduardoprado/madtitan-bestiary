@@ -1008,16 +1008,9 @@
       "title": "Creature Group"
     },
     "alignment": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "Alignment"
+      "default": "not_provided",
+      "title": "Alignment",
+      "type": "string"
     },
     "habitats": {
       "items": {
@@ -1328,7 +1321,5 @@
     "confidence"
   ],
   "title": "MonsterOccurrence",
-  "type": "object",
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://madtitan.local/schemas/monster_occurrence.schema.json"
+  "type": "object"
 }
