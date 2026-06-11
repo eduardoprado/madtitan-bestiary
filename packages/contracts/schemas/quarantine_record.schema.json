@@ -1,0 +1,242 @@
+{
+  "$defs": {
+    "QuarantineAudit": {
+      "properties": {
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "parser_version": {
+          "title": "Parser Version",
+          "type": "string"
+        },
+        "private_content": {
+          "default": true,
+          "title": "Private Content",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "created_at",
+        "parser_version"
+      ],
+      "title": "QuarantineAudit",
+      "type": "object"
+    },
+    "QuarantineError": {
+      "properties": {
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "code": {
+          "title": "Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message",
+        "code"
+      ],
+      "title": "QuarantineError",
+      "type": "object"
+    },
+    "QuarantineRepair": {
+      "properties": {
+        "eligible_for_manual_review": {
+          "default": true,
+          "title": "Eligible For Manual Review",
+          "type": "boolean"
+        },
+        "eligible_for_ocr_retry": {
+          "default": false,
+          "title": "Eligible For Ocr Retry",
+          "type": "boolean"
+        },
+        "eligible_for_llm_repair": {
+          "default": false,
+          "title": "Eligible For Llm Repair",
+          "type": "boolean"
+        },
+        "next_recommended_step": {
+          "default": "manual_review",
+          "title": "Next Recommended Step",
+          "type": "string"
+        }
+      },
+      "title": "QuarantineRepair",
+      "type": "object"
+    },
+    "QuarantineSource": {
+      "properties": {
+        "source_book_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Book Id"
+        },
+        "book_title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Book Title"
+        },
+        "ruleset": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ruleset"
+        },
+        "source_file_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source File Id"
+        },
+        "page_start": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page Start"
+        },
+        "page_end": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page End"
+        }
+      },
+      "title": "QuarantineSource",
+      "type": "object"
+    }
+  },
+  "description": "Debug record for a candidate or draft that cannot be accepted yet.",
+  "properties": {
+    "quarantine_record_id": {
+      "title": "Quarantine Record Id",
+      "type": "string"
+    },
+    "candidate_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Candidate Id"
+    },
+    "draft_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Draft Id"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "severity": {
+      "default": "review_required",
+      "title": "Severity",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/QuarantineSource"
+    },
+    "errors": {
+      "items": {
+        "$ref": "#/$defs/QuarantineError"
+      },
+      "title": "Errors",
+      "type": "array"
+    },
+    "raw_candidate_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Raw Candidate Ref"
+    },
+    "draft_payload": {
+      "title": "Draft Payload",
+      "type": "object"
+    },
+    "repair": {
+      "$ref": "#/$defs/QuarantineRepair"
+    },
+    "audit": {
+      "$ref": "#/$defs/QuarantineAudit"
+    }
+  },
+  "required": [
+    "quarantine_record_id",
+    "reason",
+    "audit"
+  ],
+  "title": "QuarantineRecord",
+  "type": "object"
+}

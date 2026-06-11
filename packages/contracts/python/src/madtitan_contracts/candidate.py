@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -57,6 +57,7 @@ class CandidatePayload(BaseModel):
 
     name_hint: str | None = None
     creature_type_hint: str | None = None
+    structured_fields: dict[str, Any] = Field(default_factory=dict)
     page_span_text: str | None = None
     page_span_text_ref: str | None = None
     sections: list[CandidateSection] = Field(default_factory=list)

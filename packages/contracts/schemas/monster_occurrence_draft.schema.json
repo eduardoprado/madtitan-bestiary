@@ -1,0 +1,91 @@
+{
+  "$defs": {
+    "NormalizationMetadata": {
+      "description": "How a candidate was converted into a structured monster draft.",
+      "properties": {
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "normalizer_version": {
+          "title": "Normalizer Version",
+          "type": "string"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "warnings": {
+          "items": {
+            "$ref": "#/$defs/NormalizationWarning"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "method",
+        "normalizer_version",
+        "run_id",
+        "confidence"
+      ],
+      "title": "NormalizationMetadata",
+      "type": "object"
+    },
+    "NormalizationWarning": {
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "default": "warning",
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "NormalizationWarning",
+      "type": "object"
+    }
+  },
+  "description": "Structured monster payload before it is accepted into the clean dataset.",
+  "properties": {
+    "draft_id": {
+      "title": "Draft Id",
+      "type": "string"
+    },
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "normalization": {
+      "$ref": "#/$defs/NormalizationMetadata"
+    },
+    "monster": {
+      "title": "Monster",
+      "type": "object"
+    }
+  },
+  "required": [
+    "draft_id",
+    "candidate_id",
+    "normalization",
+    "monster"
+  ],
+  "title": "MonsterOccurrenceDraft",
+  "type": "object"
+}

@@ -43,6 +43,10 @@ def test_monster_candidate_contract_accepts_segmented_candidate() -> None:
             "candidate": {
                 "name_hint": "Reloader",
                 "creature_type_hint": "aberration",
+                "structured_fields": {
+                    "name": "Reloader",
+                    "creature_type": "aberration",
+                },
                 "page_span_text": "synthetic candidate text",
                 "page_span_text_ref": None,
                 "sections": [
@@ -106,6 +110,7 @@ def test_monster_candidate_contract_accepts_segmented_candidate() -> None:
     assert candidate.source_format.known_variations == ["option_table_action"]
     assert candidate.lineage.extraction_methods == ["manual_transcription"]
     assert candidate.candidate.name_hint == "Reloader"
+    assert candidate.candidate.structured_fields["creature_type"] == "aberration"
     assert candidate.candidate.sections[1].label == "actions"
     assert candidate.location.bounding_boxes[0].unit == "page_ratio"
     assert candidate.quality.warnings[0].code == "possible_wrapped_action"

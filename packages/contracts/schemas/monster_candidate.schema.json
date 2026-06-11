@@ -252,6 +252,10 @@
           "default": null,
           "title": "Creature Type Hint"
         },
+        "structured_fields": {
+          "title": "Structured Fields",
+          "type": "object"
+        },
         "page_span_text": {
           "anyOf": [
             {
@@ -620,7 +624,5 @@
     "audit"
   ],
   "title": "MonsterCandidate",
-  "type": "object",
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://madtitan.local/schemas/monster_candidate.schema.json"
+  "type": "object"
 }

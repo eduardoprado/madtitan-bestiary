@@ -68,6 +68,12 @@ conditions, spellcasting metadata, legendary actions, habitats, and provenance.
 This step may be deterministic, heuristic, LLM-assisted, or manual, but it must record
 the normalizer version and method.
 
+The first implementation is intentionally narrow: it reads hand-authored or pre-parsed
+`candidate.structured_fields`, fills provenance from the candidate, and emits a
+`MonsterOccurrenceDraft` only when the payload already satisfies the current monster
+contract. Source-specific normalizers can later replace this input with structured
+fields parsed from raw candidate sections.
+
 Source-specific fields follow a promotion path during normalization:
 
 - Keep raw, rare, or source-only oddities in `source_specific_fields`.
@@ -215,6 +221,7 @@ Recommended structure:
   "candidate": {
     "name_hint": "Adult Red Dragon",
     "creature_type_hint": "dragon",
+    "structured_fields": {},
     "page_span_text": "private candidate text",
     "page_span_text_ref": null,
     "sections": [
@@ -290,6 +297,9 @@ Field guidance:
   repaired candidate to be created.
 - `candidate.name_hint`: best-effort monster name; not trusted until normalization and
   validation succeed.
+- `candidate.structured_fields`: optional manual, fixture, heuristic, or source-parser
+  output that is ready to be shaped into a `MonsterOccurrenceDraft`. This is the first
+  normalizer input, but raw section text remains the long-term source of truth.
 - `candidate.page_span_text`: private raw candidate text. Do not commit real book text.
 - `candidate.page_span_text_ref`: storage reference for private text when the raw body
   is too large or sensitive to copy inline.
@@ -304,10 +314,10 @@ Field guidance:
 ### MonsterOccurrenceDraft
 
 `MonsterOccurrenceDraft` is a proposed structured object shaped like
-`MonsterOccurrence`, but not validated yet. It can be represented as a plain JSON object
-before validation.
+`MonsterOccurrence`, but not accepted yet. The `monster` payload is still a plain JSON
+object so incomplete drafts can be preserved for debugging.
 
-Recommended wrapper:
+Contract wrapper:
 
 ```json
 {
@@ -327,6 +337,15 @@ Recommended wrapper:
 ```
 
 The `monster` payload is what Contract Validation checks.
+
+Current implementation:
+
+- `normalize_candidate(candidate)` returns a `MonsterOccurrenceDraft` when
+  `candidate.structured_fields` can satisfy the monster contract.
+- It returns a `QuarantineRecord` when structured fields are missing or contract
+  validation fails.
+- `accept_draft(draft)` returns a clean `MonsterOccurrence` or a `QuarantineRecord`
+  when the draft is invalid or below the configured confidence threshold.
 
 ### QuarantineRecord
 
