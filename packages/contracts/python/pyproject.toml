@@ -5,6 +5,9 @@ description = "Shared schema contracts for MadTitan Bestiary."
 requires-python = ">=3.11"
 dependencies = ["pydantic>=2"]
 
+[project.scripts]
+madtitan-contracts = "madtitan_contracts.__main__:main"
+
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
 

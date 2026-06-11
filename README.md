@@ -66,10 +66,69 @@ madtitan-bestiary/
   docs/           # local setup and data/secrets policy
 ```
 
+## Local development
+
+### Prerequisites
+
+- **Python 3.11+** (required by the Python workspaces)
+- **[uv](https://docs.astral.sh/uv/)** — package manager for this monorepo
+- **Docker Desktop** — for local Postgres (`docker compose`)
+
+### Python setup
+
+This repo uses a **uv workspace** spanning `pipelines/` and `packages/contracts/python/`.
+Run these from the **repo root**:
+
+```sh
+# Install uv (macOS/Linux) — skip if already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create .venv and install all workspace packages
+uv sync --all-packages
+
+# Optional: dev tools (pytest, ruff) for local testing/linting
+uv sync --all-packages --extra dev
+```
+
+`uv sync` reads `pyproject.toml` and `uv.lock`, installs dependencies into `.venv`, and
+installs the workspace packages. Use `uv run ...` to run commands in that environment
+without manually activating the venv.
+
+### Validate fixture JSON
+
+Monster fixtures under `samples/` are validated against the shared Pydantic contract in
+`packages/contracts/python/`:
+
+```sh
+# All JSON files under samples/ (recursive)
+uv run madtitan-contracts validate samples
+
+# One file
+uv run madtitan-contracts validate samples/fixtures/srd/dire_wolf_2024_structure.json
+```
+
+### Run contract tests
+
+```sh
+uv run pytest packages/contracts/python/tests
+```
+
+Requires `uv sync --all-packages --extra dev`.
+
+### Start Postgres
+
+```sh
+docker compose up -d postgres
+```
+
+Copy `.env.example` to `.env` and adjust values before running services. Full setup
+for Dagster, dbt, and the web app is in [docs/LOCAL_SETUP.md](./docs/LOCAL_SETUP.md).
+
 ## Local scaffold entry points
 
 - **Setup:** [docs/LOCAL_SETUP.md](./docs/LOCAL_SETUP.md)
 - **Secrets/data rules:** [docs/SECRETS_AND_DATA.md](./docs/SECRETS_AND_DATA.md)
+- **Extraction pipeline:** [docs/EXTRACTION_PIPELINE.md](./docs/EXTRACTION_PIPELINE.md)
 - **Postgres:** `docker-compose.yml`
 - **Dagster pipeline:** `pipelines/`
 - **dbt warehouse:** `warehouse/`

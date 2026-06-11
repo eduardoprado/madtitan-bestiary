@@ -20,7 +20,14 @@ docker compose up -d postgres
 
 The default local database is `madtitan_bestiary`.
 
-## 3. Python/Dagster workspace
+## 3. Python workspace
+
+Install Python dependencies with [uv](https://docs.astral.sh/uv/) from the repo root:
+
+```sh
+uv sync --all-packages
+uv sync --all-packages --extra dev   # optional: pytest, ruff
+```
 
 The pipeline scaffold lives in `pipelines/`. It defines placeholder Dagster assets for
 the Phase 0/1 flow:
@@ -40,3 +47,23 @@ shape for your local dbt profile, but keep the real `profiles.yml` out of Git.
 
 The Next.js scaffold lives in `web/`. It currently exposes a health endpoint and shell
 pages for search/detail work.
+
+## 6. Validate fixtures
+
+Validate every JSON fixture under `samples/`:
+
+```sh
+uv run madtitan-contracts validate samples
+```
+
+Validate a single fixture:
+
+```sh
+uv run madtitan-contracts validate samples/fixtures/srd/dire_wolf_2024_structure.json
+```
+
+Run contract tests:
+
+```sh
+uv run pytest packages/contracts/python/tests
+```
