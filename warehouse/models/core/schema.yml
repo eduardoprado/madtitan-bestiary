@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: monster_occurrence
+    description: "Validated source-specific monster records."
+    columns:
+      - name: monster_occurrence_id
+        tests: [not_null, unique]
+      - name: name
+        tests: [not_null]
+      - name: source_book_id
+        tests: [not_null]
+  - name: monster_stat
+    description: "Ability scores and challenge metadata."
+  - name: monster_defense
+    description: "AC, HP, saves, resistances, immunities, and defensive metadata."
+  - name: monster_feature
+    description: "Traits, actions, reactions, legendary actions, and related text."
+  - name: monster_attack
+    description: "Attack-level damage, to-hit, range/reach, target, and riders."

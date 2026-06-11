@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: source_book
+    description: "Private source book manifest rows."
+  - name: source_file
+    description: "Private source files and checksums."
+  - name: page
+    description: "PDF page inventory and extraction triage."
+  - name: monster_candidate
+    description: "Segmented stat-block candidates before validation."
+  - name: parsed_monster_json
+    description: "Raw parser JSON and parser metadata."
+  - name: quarantine_record
+    description: "Low-confidence or failed records excluded from app/mart models."
+  - name: extraction_run
+    description: "Pipeline run metadata and parser versions."

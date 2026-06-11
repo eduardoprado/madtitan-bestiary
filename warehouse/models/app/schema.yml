@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: monster_search
+    description: "Accepted-only denormalized search model for the web app."
+  - name: monster_detail
+    description: "Accepted-only stat block detail read model."
+  - name: facet_registry
+    description: "Metadata registry driving generic API/UI facets."
+  - name: facet_value_counts
+    description: "Available facet values and counts for accepted monsters."

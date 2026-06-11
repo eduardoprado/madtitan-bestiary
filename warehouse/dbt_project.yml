@@ -1,0 +1,32 @@
+name: madtitan_bestiary
+version: "0.1.0"
+config-version: 2
+
+profile: madtitan_bestiary
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  madtitan_bestiary:
+    raw:
+      +schema: raw
+      +materialized: view
+    core:
+      +schema: core
+      +materialized: view
+    mart:
+      +schema: mart
+      +materialized: table
+    app:
+      +schema: app
+      +materialized: table
+
+seeds:
+  madtitan_bestiary:
+    +schema: app

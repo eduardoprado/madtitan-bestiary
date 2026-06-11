@@ -1,0 +1,11 @@
+key,label,data_type,source_model,query_strategy,display_order,enabled,index_hint
+challenge_rating,Challenge Rating,range,app.monster_search,range,10,true,btree
+creature_type,Creature Type,categorical,app.monster_search,equality,20,true,btree
+size,Size,categorical,app.monster_search,equality,30,true,btree
+source_book,Source Book,categorical,app.monster_search,equality,40,true,btree
+damage_type,Damage Type,multi-value,app.monster_search,overlap,50,true,gin
+condition_immunity,Condition Immunity,multi-value,app.monster_search,overlap,60,true,gin
+spellcaster,Spellcaster,boolean,app.monster_search,equality,70,true,btree
+legendary,Legendary Actions,boolean,app.monster_search,equality,80,true,btree
+armor_class,Armor Class,range,app.monster_search,range,90,true,btree
+hit_points,Hit Points,range,app.monster_search,range,100,true,btree

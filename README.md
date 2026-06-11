@@ -1,11 +1,12 @@
-]# MadTitan Bestiary
+# MadTitan Bestiary
 
 A personal, end-to-end data platform that turns a private library of D&D 5e bestiary
 PDFs into a fast, richly-filterable monster search tool and a deep analytics
 workbench for a DM.
 
-> **Status:** Planning / pre-implementation. This repo currently contains the
-> architecture and design docs only - no application code yet.
+> **Status:** Phase 0 scaffold. The repo now contains the architecture docs plus
+> starter workspaces for pipelines, warehouse models, analytics, web, shared contracts,
+> infrastructure notes, sample fixtures, and CI guardrails.
 > See **[ARCHITECTURE.md](./ARCHITECTURE.md)** for the full design.
 
 ---
@@ -50,11 +51,11 @@ workbench for a DM.
 See **[ARCHITECTURE.md](./ARCHITECTURE.md)** for diagrams, data flow, the provisional
 modeling approach, security policy, and phased roadmap.
 
-## Repository layout planned
+## Repository layout
 
 ```text
 madtitan-bestiary/
-  pipelines/      # Python: Dagster assets for ingest, extract, validate, load
+  pipelines/      # Python/Dagster assets for ingest, extract, validate, load
   warehouse/      # dbt project targeting Postgres schemas and marts
   analytics/      # notebooks + generated reports
   web/            # Next.js + TypeScript app, API routes, Auth.js allowlist
@@ -62,8 +63,18 @@ madtitan-bestiary/
   infra/          # Terraform/config for R2, database, deployment, secrets docs
   samples/        # SRD/CC-BY or synthetic fixtures only
   .github/        # CI: tests, lint, dbt checks, docs checks
-  docs/           # additional design docs
+  docs/           # local setup and data/secrets policy
 ```
+
+## Local scaffold entry points
+
+- **Setup:** [docs/LOCAL_SETUP.md](./docs/LOCAL_SETUP.md)
+- **Secrets/data rules:** [docs/SECRETS_AND_DATA.md](./docs/SECRETS_AND_DATA.md)
+- **Postgres:** `docker-compose.yml`
+- **Dagster pipeline:** `pipelines/`
+- **dbt warehouse:** `warehouse/`
+- **Next.js app:** `web/`
+- **Shared contracts:** `packages/contracts/`
 
 ## Legal / data note
 

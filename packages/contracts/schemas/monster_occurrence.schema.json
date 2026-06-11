@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://madtitan.local/schemas/monster_occurrence.schema.json",
+  "title": "MonsterOccurrence",
+  "type": "object",
+  "required": ["name", "size", "creature_type", "provenance", "confidence"],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "size": { "type": "string", "minLength": 1 },
+    "creature_type": { "type": "string", "minLength": 1 },
+    "alignment": { "type": ["string", "null"] },
+    "challenge_rating": { "type": ["string", "null"] },
+    "armor_class": { "type": ["integer", "null"], "minimum": 0 },
+    "hit_points": { "type": ["integer", "null"], "minimum": 0 },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "source_title",
+        "page_start",
+        "page_end",
+        "extraction_method",
+        "parser_version"
+      ],
+      "properties": {
+        "source_id": { "type": "string" },
+        "source_title": { "type": "string" },
+        "page_start": { "type": "integer", "minimum": 1 },
+        "page_end": { "type": "integer", "minimum": 1 },
+        "extraction_method": { "type": "string" },
+        "parser_version": { "type": "string" }
+      }
+    },
+    "raw_json": { "type": "object" }
+  }
+}

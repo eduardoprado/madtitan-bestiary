@@ -1,0 +1,19 @@
+name: Scaffold Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate-fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate synthetic fixture JSON
+        run: python -m json.tool samples/synthetic/monster_occurrences.json >/tmp/monster_occurrences.json
+      - name: Check private data guardrails
+        run: |
+          test ! -d data
+          test ! -d extracted
+          test ! -d exports

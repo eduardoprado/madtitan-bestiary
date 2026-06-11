@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: madtitan-bestiary-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-madtitan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-madtitan}
+      POSTGRES_DB: ${POSTGRES_DB:-madtitan_bestiary}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-madtitan} -d ${POSTGRES_DB:-madtitan_bestiary}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

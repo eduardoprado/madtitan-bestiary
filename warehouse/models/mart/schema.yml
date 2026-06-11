@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_monster_occurrence
+    description: "Monster dimension preserving source-specific occurrences."
+  - name: dim_source_book
+    description: "Source book dimension."
+  - name: dim_creature_type
+    description: "Creature type dimension."
+  - name: dim_cr
+    description: "Challenge rating dimension."
+  - name: fact_attack
+    description: "Attack-grain fact table."
+  - name: fact_damage_instance
+    description: "Damage-instance fact table for analytics."
+  - name: monster_damage_by_cr
+    description: "Damage-per-round summaries by challenge rating."
+  - name: monster_defense_by_cr
+    description: "AC and HP summaries by challenge rating."
+  - name: action_economy
+    description: "Action economy analytics across action types."

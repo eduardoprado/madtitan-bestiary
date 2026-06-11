@@ -1,0 +1,12 @@
+madtitan_bestiary:
+  target: local
+  outputs:
+    local:
+      type: postgres
+      host: localhost
+      user: madtitan
+      password: madtitan
+      port: 5432
+      dbname: madtitan_bestiary
+      schema: public
+      threads: 4
