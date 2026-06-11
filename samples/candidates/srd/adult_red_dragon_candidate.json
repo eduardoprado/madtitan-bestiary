@@ -1,0 +1,437 @@
+{
+  "candidate_id": "mm2024-p0255-adult-red-dragon-candidate-v1",
+  "status": "pending",
+  "source": {
+    "source_book_id": "monster-manual-2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "monster-manual-2024-fixture",
+    "source_file_checksum": "sha256:monster-manual-2024-fixture",
+    "page_start": 255,
+    "page_end": 255,
+    "page_labels": [
+      "255"
+    ]
+  },
+  "source_format": {
+    "profile_id": "mm2024-statblock",
+    "profile_version": "v1",
+    "statblock_family": "dnd_2024",
+    "layout_type": "two_column_card",
+    "expected_single_page": true,
+    "column_count": 2,
+    "section_order": [
+      "header",
+      "traits",
+      "actions",
+      "legendary_actions"
+    ],
+    "heading_patterns": [
+      "uppercase_statblock_heading",
+      "section_rule_heading"
+    ],
+    "known_variations": [
+      "multiple_speeds",
+      "recharge_action",
+      "spellcasting_action",
+      "lair_variant_xp"
+    ],
+    "notes": "Candidate fixture generated from the reviewed structured occurrence fixture.",
+    "metadata": {
+      "fixture_kind": "candidate_from_reviewed_occurrence"
+    }
+  },
+  "lineage": {
+    "extracted_page_text_ids": [
+      "mm2024-p0255-adult-red-dragon-text-v1"
+    ],
+    "extraction_methods": [
+      "manual_transcription"
+    ],
+    "segmentation_run_id": "candidate-fixture-generation-2026-06-11",
+    "segmentation_method": "manual_reviewed_sections",
+    "segmenter_version": "segmenter-fixture-v0.1.0",
+    "parent_candidate_id": null,
+    "repair_source_quarantine_record_id": null
+  },
+  "candidate": {
+    "name_hint": "Adult Red Dragon",
+    "creature_type_hint": "dragon",
+    "structured_fields": {
+      "name": "Adult Red Dragon",
+      "size": "Huge",
+      "creature_type": "dragon",
+      "creature_group": "chromatic",
+      "alignment": "Chaotic Evil",
+      "habitats": [
+        "hill",
+        "mountain"
+      ],
+      "armor_class": {
+        "value": 19,
+        "source": "non-specified"
+      },
+      "hit_points": 256,
+      "hit_point_formula": {
+        "raw": "19d12 + 133",
+        "quantity": 19,
+        "die_type": "d12",
+        "modifier": 133
+      },
+      "speeds": [
+        {
+          "mode": "walk",
+          "distance": 40,
+          "unit": "ft"
+        },
+        {
+          "mode": "climb",
+          "distance": 40,
+          "unit": "ft"
+        },
+        {
+          "mode": "fly",
+          "distance": 80,
+          "unit": "ft"
+        }
+      ],
+      "initiative": {
+        "bonus": 12,
+        "static_value": 22
+      },
+      "abilities": {
+        "str": {
+          "score": 27,
+          "modifier": 8,
+          "saving_throw": 8
+        },
+        "dex": {
+          "score": 10,
+          "modifier": 0,
+          "saving_throw": 6
+        },
+        "con": {
+          "score": 25,
+          "modifier": 7,
+          "saving_throw": 7
+        },
+        "int": {
+          "score": 16,
+          "modifier": 3,
+          "saving_throw": 3
+        },
+        "wis": {
+          "score": 13,
+          "modifier": 1,
+          "saving_throw": 7
+        },
+        "cha": {
+          "score": 23,
+          "modifier": 6,
+          "saving_throw": 6
+        }
+      },
+      "skills": [
+        {
+          "name": "Perception",
+          "modifier": 13
+        },
+        {
+          "name": "Stealth",
+          "modifier": 6
+        }
+      ],
+      "senses": [
+        {
+          "name": "Blindsight",
+          "distance": 60,
+          "unit": "ft"
+        },
+        {
+          "name": "Darkvision",
+          "distance": 120,
+          "unit": "ft"
+        }
+      ],
+      "passive_perception": 23,
+      "languages": [
+        "Common",
+        "Draconic"
+      ],
+      "languages_text": "Common, Draconic",
+      "gear": [],
+      "damage_resistances": [],
+      "damage_immunities": [
+        "Fire"
+      ],
+      "condition_immunities": [],
+      "challenge": {
+        "rating": "17",
+        "xp": 18000,
+        "lair_xp": 20000,
+        "proficiency_bonus": 6
+      },
+      "features": [
+        {
+          "name": "Legendary Resistance",
+          "kind": "trait",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "uses": 3,
+            "lair_uses": 4
+          }
+        },
+        {
+          "name": "Multiattack",
+          "kind": "action",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "attack_count": 3,
+            "allowed_attacks": [
+              "Rend"
+            ],
+            "replacement": {
+              "replace_count": 1,
+              "feature": "Spellcasting",
+              "spell": "Scorching Ray"
+            }
+          }
+        },
+        {
+          "name": "Rend",
+          "kind": "action",
+          "text": "[source text omitted from public fixture]",
+          "attack": {
+            "attack_type": "melee",
+            "attack_roll_bonus": 14,
+            "reach": 10,
+            "reach_unit": "ft",
+            "damage": [
+              {
+                "average": 13,
+                "formula": {
+                  "raw": "1d10 + 8",
+                  "quantity": 1,
+                  "die_type": "d10",
+                  "modifier": 8
+                },
+                "damage_type": "Slashing"
+              },
+              {
+                "average": 5,
+                "formula": {
+                  "raw": "2d4",
+                  "quantity": 2,
+                  "die_type": "d4",
+                  "modifier": 0
+                },
+                "damage_type": "Fire"
+              }
+            ]
+          },
+          "damage_types": [
+            "Slashing",
+            "Fire"
+          ]
+        },
+        {
+          "name": "Fire Breath",
+          "kind": "action",
+          "text": "[source text omitted from public fixture]",
+          "saving_throw": {
+            "ability": "Dexterity",
+            "dc": 21,
+            "success": "half_damage",
+            "failure": "full_damage"
+          },
+          "recharge": {
+            "type": "d6_range",
+            "minimum": 5,
+            "maximum": 6,
+            "text": "Recharge 5-6"
+          },
+          "area": {
+            "shape": "cone",
+            "size": 60,
+            "unit": "ft"
+          },
+          "damage": [
+            {
+              "average": 59,
+              "formula": {
+                "raw": "17d6",
+                "quantity": 17,
+                "die_type": "d6",
+                "modifier": 0
+              },
+              "damage_type": "Fire"
+            }
+          ],
+          "damage_types": [
+            "Fire"
+          ]
+        },
+        {
+          "name": "Spellcasting",
+          "kind": "action",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "spellcasting_ability": "Charisma",
+            "spell_save_dc": 20,
+            "spell_attack_bonus": 12,
+            "requires_material_components": false,
+            "spell_groups": [
+              {
+                "frequency": "at_will",
+                "spells": [
+                  "Command",
+                  "Detect Magic",
+                  "Scorching Ray"
+                ],
+                "notes": {
+                  "Command": "level 2 version"
+                }
+              },
+              {
+                "frequency": "1_per_day",
+                "spells": [
+                  "Fireball"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "has_spellcasting": true,
+      "has_bonus_actions": false,
+      "bonus_actions": [],
+      "has_reactions": false,
+      "reactions": [],
+      "legendary_status": "legendary",
+      "legendary_resistance": {
+        "uses": 3,
+        "lair_uses": 4
+      },
+      "legendary_action_uses": {
+        "uses": 3,
+        "lair_uses": 4,
+        "regain_timing": "start_of_turn"
+      },
+      "has_lair_variant": true,
+      "legendary_actions": [
+        {
+          "name": "Commanding Presence",
+          "kind": "legendary_action",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "spells": [
+              "Command"
+            ],
+            "spell_notes": {
+              "Command": "level 2 version"
+            },
+            "uses_spellcasting": true,
+            "reuse_limit": "until_start_of_next_turn"
+          }
+        },
+        {
+          "name": "Fiery Rays",
+          "kind": "legendary_action",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "spells": [
+              "Scorching Ray"
+            ],
+            "uses_spellcasting": true,
+            "reuse_limit": "until_start_of_next_turn"
+          }
+        },
+        {
+          "name": "Pounce",
+          "kind": "legendary_action",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "movement": "up_to_half_speed",
+            "attack": "Rend"
+          }
+        }
+      ],
+      "lair_actions": [],
+      "content_flags": {
+        "has_image": true,
+        "has_lore": true
+      },
+      "damage_types_dealt": [
+        "Fire",
+        "Slashing"
+      ],
+      "conditions_inflicted": [],
+      "tags": [
+        "srd-candidate",
+        "field-inventory"
+      ],
+      "source_specific_fields": {}
+    },
+    "page_span_text": "[redacted public fixture candidate text]",
+    "page_span_text_ref": null,
+    "sections": [
+      {
+        "label": "header",
+        "text": "[redacted fixture text: huge dragon header and stat rows identified]"
+      },
+      {
+        "label": "traits",
+        "text": "[redacted fixture text: legendary resistance trait identified]"
+      },
+      {
+        "label": "actions",
+        "text": "[redacted fixture text: multiattack, rend, breath, and spellcasting actions identified]"
+      },
+      {
+        "label": "legendary_actions",
+        "text": "[redacted fixture text: legendary action uses and three options identified]"
+      }
+    ],
+    "start_marker": "ADULT RED DRAGON",
+    "end_marker": "LEGENDARY ACTIONS",
+    "raw_text_hash": "sha256:mm2024-p0255-adult-red-dragon-candidate-v1-redacted-text"
+  },
+  "location": {
+    "page_start": 255,
+    "page_end": 255,
+    "text_start_offset": 0,
+    "text_end_offset": null,
+    "bounding_boxes": [
+      {
+        "page": 255,
+        "x0": 0.02,
+        "y0": 0.02,
+        "x1": 0.98,
+        "y1": 0.98,
+        "unit": "page_ratio"
+      }
+    ]
+  },
+  "quality": {
+    "confidence": 0.94,
+    "text_quality": "redacted_fixture",
+    "segmentation_quality": "complete",
+    "warnings": [
+      {
+        "code": "spell_action_reference",
+        "message": "Spell-mediated effects are intentionally not added to derived conditions."
+      }
+    ]
+  },
+  "normalization": {
+    "recommended_method": "structured_fields",
+    "attempt_count": 0,
+    "last_attempt_at": null
+  },
+  "audit": {
+    "created_at": "2026-06-11T06:00:00Z",
+    "created_by": "manual_fixture_generation",
+    "private_content": false,
+    "updated_at": null
+  }
+}

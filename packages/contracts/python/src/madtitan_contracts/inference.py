@@ -97,7 +97,27 @@ def _infer_abilities(payload: dict[str, Any], warnings: list[NormalizationWarnin
 
 
 def _infer_initiative(payload: dict[str, Any], warnings: list[NormalizationWarning]) -> None:
-    if payload.get("initiative") is not None:
+    initiative = payload.get("initiative")
+    if isinstance(initiative, dict):
+        bonus = initiative.get("bonus")
+        static_value = initiative.get("static_value")
+
+        if isinstance(static_value, int) and bonus is None:
+            initiative["bonus"] = static_value - 10
+            warnings.append(
+                _warning("inferred_initiative_bonus", "Inferred initiative bonus from static value.")
+            )
+        elif isinstance(bonus, int) and static_value is None:
+            initiative["static_value"] = 10 + bonus
+            warnings.append(
+                _warning(
+                    "inferred_initiative_static_value",
+                    "Inferred initiative static value from bonus.",
+                )
+            )
+        return
+
+    if initiative is not None:
         return
 
     abilities = payload.get("abilities")

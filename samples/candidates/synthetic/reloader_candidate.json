@@ -1,0 +1,613 @@
+{
+  "candidate_id": "synthetic-p0001-reloader-candidate-v1",
+  "status": "pending",
+  "source": {
+    "source_book_id": "synthetic-fixtures",
+    "book_title": "Synthetic Fixtures",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "synthetic-reloader-fixture",
+    "source_file_checksum": "sha256:synthetic-reloader-fixture",
+    "page_start": 1,
+    "page_end": 1,
+    "page_labels": [
+      "1"
+    ]
+  },
+  "source_format": {
+    "profile_id": "synthetic-2024-complex-statblock",
+    "profile_version": "v1",
+    "statblock_family": "synthetic_dnd_2024_style",
+    "layout_type": "two_column_card",
+    "expected_single_page": true,
+    "column_count": 2,
+    "section_order": [
+      "header",
+      "traits",
+      "actions",
+      "bonus_actions",
+      "legendary_actions"
+    ],
+    "heading_patterns": [
+      "uppercase_statblock_heading",
+      "section_rule_heading"
+    ],
+    "known_variations": [
+      "hover_speed",
+      "option_table_action",
+      "bonus_action_area",
+      "synthetic_non_srd_transform"
+    ],
+    "notes": "Candidate fixture generated from the reviewed structured occurrence fixture.",
+    "metadata": {
+      "fixture_kind": "candidate_from_reviewed_occurrence"
+    }
+  },
+  "lineage": {
+    "extracted_page_text_ids": [
+      "synthetic-p0001-reloader-text-v1"
+    ],
+    "extraction_methods": [
+      "manual_transcription"
+    ],
+    "segmentation_run_id": "candidate-fixture-generation-2026-06-11",
+    "segmentation_method": "manual_reviewed_sections",
+    "segmenter_version": "segmenter-fixture-v0.1.0",
+    "parent_candidate_id": null,
+    "repair_source_quarantine_record_id": null
+  },
+  "candidate": {
+    "name_hint": "Reloader",
+    "creature_type_hint": "aberration",
+    "structured_fields": {
+      "name": "Reloader",
+      "size": "Large",
+      "creature_type": "aberration",
+      "creature_group": "debuggers",
+      "alignment": "Lawful Evil",
+      "habitats": [
+        "underdark"
+      ],
+      "armor_class": {
+        "value": 17,
+        "source": "non-specified"
+      },
+      "hit_points": 184,
+      "hit_point_formula": {
+        "raw": "19d10 + 76",
+        "quantity": 19,
+        "die_type": "d10",
+        "modifier": 76
+      },
+      "speeds": [
+        {
+          "mode": "walk",
+          "distance": 5,
+          "unit": "ft"
+        },
+        {
+          "mode": "fly",
+          "distance": 40,
+          "unit": "ft",
+          "hover": true
+        }
+      ],
+      "initiative": {
+        "bonus": 11,
+        "static_value": 21
+      },
+      "abilities": {
+        "str": {
+          "score": 15,
+          "modifier": 2,
+          "saving_throw": 2
+        },
+        "dex": {
+          "score": 15,
+          "modifier": 2,
+          "saving_throw": 2
+        },
+        "con": {
+          "score": 19,
+          "modifier": 4,
+          "saving_throw": 8
+        },
+        "int": {
+          "score": 18,
+          "modifier": 4,
+          "saving_throw": 4
+        },
+        "wis": {
+          "score": 16,
+          "modifier": 3,
+          "saving_throw": 7
+        },
+        "cha": {
+          "score": 16,
+          "modifier": 3,
+          "saving_throw": 3
+        }
+      },
+      "skills": [
+        {
+          "name": "Perception",
+          "modifier": 11
+        }
+      ],
+      "senses": [
+        {
+          "name": "Darkvision",
+          "distance": 120,
+          "unit": "ft"
+        }
+      ],
+      "passive_perception": 21,
+      "languages": [
+        "Deep Speech",
+        "Undercommon"
+      ],
+      "languages_text": "Deep Speech, Undercommon",
+      "gear": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [
+        "Prone"
+      ],
+      "challenge": {
+        "rating": "13",
+        "xp": 10000,
+        "lair_xp": 11500,
+        "proficiency_bonus": 5
+      },
+      "features": [
+        {
+          "name": "Checkpoint Override",
+          "kind": "trait",
+          "text": "[synthetic source text omitted]",
+          "metadata": {
+            "uses": 3,
+            "lair_uses": 4
+          }
+        },
+        {
+          "name": "Batch Execute",
+          "kind": "action",
+          "text": "[synthetic source text omitted]",
+          "metadata": {
+            "feature": "Patch Rays",
+            "uses": 3
+          }
+        },
+        {
+          "name": "Null Bite",
+          "kind": "action",
+          "text": "[synthetic source text omitted]",
+          "attack": {
+            "attack_type": "melee",
+            "attack_roll_bonus": 8,
+            "reach": 5,
+            "reach_unit": "ft",
+            "damage": [
+              {
+                "average": 12,
+                "formula": {
+                  "raw": "3d6 + 2",
+                  "quantity": 3,
+                  "die_type": "d6",
+                  "modifier": 2
+                },
+                "damage_type": "Piercing"
+              }
+            ]
+          },
+          "damage_types": [
+            "Piercing"
+          ]
+        },
+        {
+          "name": "Patch Rays",
+          "kind": "action",
+          "text": "[synthetic source text omitted]",
+          "metadata": {
+            "selection": "roll_1d10",
+            "range": 120,
+            "range_unit": "ft",
+            "reroll_duplicate_this_turn": true
+          },
+          "options": [
+            {
+              "label": "1",
+              "name": "Modal Prompt",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Wisdom",
+                "dc": 15,
+                "success": "half_damage",
+                "failure": "full_damage_and_condition"
+              },
+              "damage": [
+                {
+                  "average": 12,
+                  "formula": {
+                    "raw": "3d8",
+                    "quantity": 3,
+                    "die_type": "d8",
+                    "modifier": 0
+                  },
+                  "damage_type": "Psychic"
+                }
+              ],
+              "damage_types": [
+                "Psychic"
+              ],
+              "conditions_inflicted": [
+                "Charmed"
+              ]
+            },
+            {
+              "label": "2",
+              "name": "Deadlock Thread",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Constitution",
+                "dc": 15,
+                "failure": "condition"
+              },
+              "conditions_inflicted": [
+                "Paralyzed"
+              ],
+              "metadata": {
+                "repeat_save": "end_of_turn",
+                "automatic_end": "after_1_minute"
+              }
+            },
+            {
+              "label": "3",
+              "name": "Panic Log",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Wisdom",
+                "dc": 15,
+                "success": "half_damage",
+                "failure": "full_damage_and_condition"
+              },
+              "damage": [
+                {
+                  "average": 15,
+                  "formula": {
+                    "raw": "4d6 + 1",
+                    "quantity": 4,
+                    "die_type": "d6",
+                    "modifier": 1
+                  },
+                  "damage_type": "Psychic"
+                }
+              ],
+              "damage_types": [
+                "Psychic"
+              ],
+              "conditions_inflicted": [
+                "Frightened"
+              ]
+            },
+            {
+              "label": "4",
+              "name": "Throttle Loop",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Constitution",
+                "dc": 15,
+                "success": "half_damage",
+                "failure": "full_damage_and_effect"
+              },
+              "damage": [
+                {
+                  "average": 19,
+                  "formula": {
+                    "raw": "4d8 + 1",
+                    "quantity": 4,
+                    "die_type": "d8",
+                    "modifier": 1
+                  },
+                  "damage_type": "Necrotic"
+                }
+              ],
+              "damage_types": [
+                "Necrotic"
+              ],
+              "metadata": {
+                "speed_multiplier": 0.5,
+                "blocks_reactions": true,
+                "action_or_bonus_action_only": true
+              }
+            },
+            {
+              "label": "5",
+              "name": "Memory Leak",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Constitution",
+                "dc": 15,
+                "success": "half_damage",
+                "failure": "full_damage_and_condition"
+              },
+              "damage": [
+                {
+                  "average": 14,
+                  "formula": {
+                    "raw": "3d8 + 1",
+                    "quantity": 3,
+                    "die_type": "d8",
+                    "modifier": 1
+                  },
+                  "damage_type": "Poison"
+                }
+              ],
+              "damage_types": [
+                "Poison"
+              ],
+              "conditions_inflicted": [
+                "Poisoned"
+              ],
+              "metadata": {
+                "blocks_hit_point_regain": true
+              }
+            },
+            {
+              "label": "6",
+              "name": "Force Push",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Strength",
+                "dc": 15,
+                "failure": "forced_movement_and_condition"
+              },
+              "conditions_inflicted": [
+                "Restrained"
+              ],
+              "metadata": {
+                "forced_movement": 25,
+                "forced_movement_unit": "ft",
+                "automatic_success_size": "Gargantuan"
+              }
+            },
+            {
+              "label": "7",
+              "name": "Suspend Process",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Wisdom",
+                "dc": 15,
+                "failure": "condition"
+              },
+              "conditions_inflicted": [
+                "Unconscious"
+              ],
+              "metadata": {
+                "automatic_success_creature_types": [
+                  "construct",
+                  "undead"
+                ],
+                "duration": "1_minute"
+              }
+            },
+            {
+              "label": "8",
+              "name": "Compile Lock",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Constitution",
+                "dc": 15,
+                "failure": "staged_condition"
+              },
+              "conditions_inflicted": [
+                "Restrained",
+                "Petrified"
+              ],
+              "metadata": {
+                "first_failure": "Restrained",
+                "second_failure": "Petrified",
+                "repeat_save": "end_of_next_turn"
+              }
+            },
+            {
+              "label": "9",
+              "name": "Garbage Collect",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Dexterity",
+                "dc": 15,
+                "success": "half_damage",
+                "failure": "full_damage"
+              },
+              "damage": [
+                {
+                  "average": 35,
+                  "formula": {
+                    "raw": "8d8",
+                    "quantity": 8,
+                    "die_type": "d8",
+                    "modifier": 0
+                  },
+                  "damage_type": "Force"
+                }
+              ],
+              "damage_types": [
+                "Force"
+              ],
+              "metadata": {
+                "zero_hit_point_effect": "disintegrates_into_dust"
+              }
+            },
+            {
+              "label": "10",
+              "name": "Kernel Panic",
+              "text": "[synthetic source text omitted]",
+              "saving_throw": {
+                "ability": "Dexterity",
+                "dc": 15,
+                "success": "half_damage",
+                "failure": "full_damage"
+              },
+              "damage": [
+                {
+                  "average": 54,
+                  "formula": {
+                    "raw": "10d10 - 1",
+                    "quantity": 10,
+                    "die_type": "d10",
+                    "modifier": -1
+                  },
+                  "damage_type": "Necrotic"
+                }
+              ],
+              "damage_types": [
+                "Necrotic"
+              ],
+              "metadata": {
+                "zero_hit_point_effect": "dies"
+              }
+            }
+          ]
+        }
+      ],
+      "has_spellcasting": false,
+      "has_bonus_actions": true,
+      "bonus_actions": [
+        {
+          "name": "Null Zone",
+          "kind": "bonus_action",
+          "text": "[synthetic source text omitted]",
+          "area": {
+            "shape": "cone",
+            "size": 150,
+            "unit": "ft"
+          }
+        }
+      ],
+      "has_reactions": false,
+      "reactions": [],
+      "legendary_status": "legendary",
+      "legendary_resistance": {
+        "uses": 3,
+        "lair_uses": 4
+      },
+      "legendary_action_uses": {
+        "uses": 3,
+        "lair_uses": 4,
+        "regain_timing": "start_of_turn"
+      },
+      "has_lair_variant": true,
+      "legendary_actions": [
+        {
+          "name": "Hot Reload",
+          "kind": "legendary_action",
+          "text": "[synthetic source text omitted]",
+          "metadata": {
+            "attack": "Null Bite",
+            "attack_count": 2
+          }
+        },
+        {
+          "name": "Watch Mode",
+          "kind": "legendary_action",
+          "text": "[synthetic source text omitted]",
+          "metadata": {
+            "feature": "Patch Rays"
+          }
+        }
+      ],
+      "lair_actions": [],
+      "content_flags": {
+        "has_image": true,
+        "has_lore": true
+      },
+      "damage_types_dealt": [
+        "Force",
+        "Necrotic",
+        "Piercing",
+        "Poison",
+        "Psychic"
+      ],
+      "conditions_inflicted": [
+        "Charmed",
+        "Frightened",
+        "Paralyzed",
+        "Petrified",
+        "Poisoned",
+        "Restrained",
+        "Unconscious"
+      ],
+      "tags": [
+        "synthetic",
+        "field-inventory",
+        "non-srd-transform"
+      ],
+      "source_specific_fields": {}
+    },
+    "page_span_text": "[redacted public fixture candidate text]",
+    "page_span_text_ref": null,
+    "sections": [
+      {
+        "label": "header",
+        "text": "[synthetic fixture text: reloader header and stat rows identified]"
+      },
+      {
+        "label": "traits",
+        "text": "[synthetic fixture text: resilience trait identified]"
+      },
+      {
+        "label": "actions",
+        "text": "[synthetic fixture text: bite and random patch ray options identified]"
+      },
+      {
+        "label": "bonus_actions",
+        "text": "[synthetic fixture text: null-zone cone bonus action identified]"
+      },
+      {
+        "label": "legendary_actions",
+        "text": "[synthetic fixture text: two legendary action options identified]"
+      }
+    ],
+    "start_marker": "RELOADER",
+    "end_marker": "LEGENDARY ACTIONS",
+    "raw_text_hash": "sha256:synthetic-p0001-reloader-candidate-v1-redacted-text"
+  },
+  "location": {
+    "page_start": 1,
+    "page_end": 1,
+    "text_start_offset": 0,
+    "text_end_offset": null,
+    "bounding_boxes": [
+      {
+        "page": 1,
+        "x0": 0.02,
+        "y0": 0.02,
+        "x1": 0.98,
+        "y1": 0.98,
+        "unit": "page_ratio"
+      }
+    ]
+  },
+  "quality": {
+    "confidence": 0.9,
+    "text_quality": "redacted_fixture",
+    "segmentation_quality": "complete",
+    "warnings": [
+      {
+        "code": "synthetic_transform",
+        "message": "Synthetic candidate derived from the Reloader fixture, not a source statblock."
+      }
+    ]
+  },
+  "normalization": {
+    "recommended_method": "structured_fields",
+    "attempt_count": 0,
+    "last_attempt_at": null
+  },
+  "audit": {
+    "created_at": "2026-06-11T06:00:00Z",
+    "created_by": "manual_fixture_generation",
+    "private_content": false,
+    "updated_at": null
+  }
+}

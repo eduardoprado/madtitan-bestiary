@@ -1,0 +1,251 @@
+{
+  "candidate_id": "mm2024-p0352-dire-wolf-candidate-v1",
+  "status": "pending",
+  "source": {
+    "source_book_id": "monster-manual-2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "monster-manual-2024-fixture",
+    "source_file_checksum": "sha256:monster-manual-2024-fixture",
+    "page_start": 352,
+    "page_end": 352,
+    "page_labels": [
+      "352"
+    ]
+  },
+  "source_format": {
+    "profile_id": "mm2024-statblock",
+    "profile_version": "v1",
+    "statblock_family": "dnd_2024",
+    "layout_type": "two_column_card",
+    "expected_single_page": true,
+    "column_count": 2,
+    "section_order": [
+      "header",
+      "traits",
+      "actions"
+    ],
+    "heading_patterns": [
+      "uppercase_statblock_heading",
+      "section_rule_heading"
+    ],
+    "known_variations": [
+      "single_page_statblock"
+    ],
+    "notes": "Candidate fixture generated from the reviewed structured occurrence fixture.",
+    "metadata": {
+      "fixture_kind": "candidate_from_reviewed_occurrence"
+    }
+  },
+  "lineage": {
+    "extracted_page_text_ids": [
+      "mm2024-p0352-dire-wolf-text-v1"
+    ],
+    "extraction_methods": [
+      "manual_transcription"
+    ],
+    "segmentation_run_id": "candidate-fixture-generation-2026-06-11",
+    "segmentation_method": "manual_reviewed_sections",
+    "segmenter_version": "segmenter-fixture-v0.1.0",
+    "parent_candidate_id": null,
+    "repair_source_quarantine_record_id": null
+  },
+  "candidate": {
+    "name_hint": "Dire Wolf",
+    "creature_type_hint": "beast",
+    "structured_fields": {
+      "name": "Dire Wolf",
+      "size": "Large",
+      "creature_type": "beast",
+      "creature_group": null,
+      "alignment": "Unaligned",
+      "habitats": [
+        "forest"
+      ],
+      "armor_class": {
+        "value": 14,
+        "source": "non-specified"
+      },
+      "hit_points": 22,
+      "hit_point_formula": {
+        "raw": "3d10 + 6",
+        "quantity": 3,
+        "die_type": "d10",
+        "modifier": 6
+      },
+      "speeds": [
+        {
+          "mode": "walk",
+          "distance": 50,
+          "unit": "ft"
+        }
+      ],
+      "initiative": {
+        "static_value": 12
+      },
+      "abilities": {
+        "str": {
+          "score": 17
+        },
+        "dex": {
+          "score": 15
+        },
+        "con": {
+          "score": 15
+        },
+        "int": {
+          "score": 3
+        },
+        "wis": {
+          "score": 12
+        },
+        "cha": {
+          "score": 7
+        }
+      },
+      "skills": [
+        {
+          "name": "Perception",
+          "modifier": 5
+        },
+        {
+          "name": "Stealth",
+          "modifier": 4
+        }
+      ],
+      "senses": [
+        {
+          "name": "Darkvision",
+          "distance": 60,
+          "unit": "ft"
+        }
+      ],
+      "passive_perception": 15,
+      "languages": [],
+      "languages_text": "None",
+      "gear": [],
+      "challenge": {
+        "rating": "1",
+        "xp": 200,
+        "lair_xp": null,
+        "proficiency_bonus": 2
+      },
+      "features": [
+        {
+          "name": "Pack Tactics",
+          "kind": "trait",
+          "text": "[source text omitted from public fixture]",
+          "damage_types": [],
+          "conditions_inflicted": []
+        },
+        {
+          "name": "Bite",
+          "kind": "action",
+          "text": "[source text omitted from public fixture]",
+          "attack": {
+            "attack_type": "melee",
+            "attack_roll_bonus": 5,
+            "reach": 5,
+            "reach_unit": "ft",
+            "damage": [
+              {
+                "average": 8,
+                "formula": {
+                  "raw": "1d10 + 3",
+                  "quantity": 1,
+                  "die_type": "d10",
+                  "modifier": 3
+                },
+                "damage_type": "Piercing"
+              }
+            ],
+            "target_size_limit": "Large or smaller"
+          },
+          "damage_types": [
+            "Piercing"
+          ],
+          "conditions_inflicted": [
+            "Prone"
+          ]
+        }
+      ],
+      "has_bonus_actions": false,
+      "bonus_actions": [],
+      "has_reactions": false,
+      "reactions": [],
+      "legendary_status": "ordinary",
+      "legendary_resistance": null,
+      "legendary_action_uses": null,
+      "has_lair_variant": false,
+      "legendary_actions": [],
+      "lair_actions": [],
+      "content_flags": {
+        "has_image": true,
+        "has_lore": false
+      },
+      "damage_types_dealt": [
+        "Piercing"
+      ],
+      "conditions_inflicted": [
+        "Prone"
+      ],
+      "tags": [
+        "srd-candidate",
+        "field-inventory"
+      ],
+      "source_specific_fields": {}
+    },
+    "page_span_text": "[redacted public fixture candidate text]",
+    "page_span_text_ref": null,
+    "sections": [
+      {
+        "label": "header",
+        "text": "[redacted fixture text: name, type, AC, HP, speed, abilities, skills, senses, CR]"
+      },
+      {
+        "label": "traits",
+        "text": "[redacted fixture text: one trait identified]"
+      },
+      {
+        "label": "actions",
+        "text": "[redacted fixture text: one melee attack action identified]"
+      }
+    ],
+    "start_marker": "DIRE WOLF",
+    "end_marker": "ACTIONS",
+    "raw_text_hash": "sha256:mm2024-p0352-dire-wolf-candidate-v1-redacted-text"
+  },
+  "location": {
+    "page_start": 352,
+    "page_end": 352,
+    "text_start_offset": 0,
+    "text_end_offset": null,
+    "bounding_boxes": [
+      {
+        "page": 352,
+        "x0": 0.02,
+        "y0": 0.02,
+        "x1": 0.98,
+        "y1": 0.98,
+        "unit": "page_ratio"
+      }
+    ]
+  },
+  "quality": {
+    "confidence": 0.95,
+    "text_quality": "redacted_fixture",
+    "segmentation_quality": "complete",
+    "warnings": []
+  },
+  "normalization": {
+    "recommended_method": "structured_fields",
+    "attempt_count": 0,
+    "last_attempt_at": null
+  },
+  "audit": {
+    "created_at": "2026-06-11T06:00:00Z",
+    "created_by": "manual_fixture_generation",
+    "private_content": false,
+    "updated_at": null
+  }
+}

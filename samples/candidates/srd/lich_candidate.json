@@ -1,0 +1,499 @@
+{
+  "candidate_id": "mm2024-p0196-lich-candidate-v1",
+  "status": "pending",
+  "source": {
+    "source_book_id": "monster-manual-2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "monster-manual-2024-fixture",
+    "source_file_checksum": "sha256:monster-manual-2024-fixture",
+    "page_start": 196,
+    "page_end": 196,
+    "page_labels": [
+      "196"
+    ]
+  },
+  "source_format": {
+    "profile_id": "mm2024-statblock",
+    "profile_version": "v1",
+    "statblock_family": "dnd_2024",
+    "layout_type": "two_column_card",
+    "expected_single_page": true,
+    "column_count": 2,
+    "section_order": [
+      "header",
+      "traits",
+      "actions",
+      "reactions",
+      "legendary_actions"
+    ],
+    "heading_patterns": [
+      "uppercase_statblock_heading",
+      "section_rule_heading"
+    ],
+    "known_variations": [
+      "spellcasting_action",
+      "lair_variant_xp",
+      "legendary_lair_uses"
+    ],
+    "notes": "Candidate fixture generated from the reviewed structured occurrence fixture.",
+    "metadata": {
+      "fixture_kind": "candidate_from_reviewed_occurrence"
+    }
+  },
+  "lineage": {
+    "extracted_page_text_ids": [
+      "mm2024-p0196-lich-text-v1"
+    ],
+    "extraction_methods": [
+      "manual_transcription"
+    ],
+    "segmentation_run_id": "candidate-fixture-generation-2026-06-11",
+    "segmentation_method": "manual_reviewed_sections",
+    "segmenter_version": "segmenter-fixture-v0.1.0",
+    "parent_candidate_id": null,
+    "repair_source_quarantine_record_id": null
+  },
+  "candidate": {
+    "name_hint": "Lich",
+    "creature_type_hint": "undead",
+    "structured_fields": {
+      "name": "Lich",
+      "size": "Medium",
+      "creature_type": "undead",
+      "creature_group": "wizard",
+      "alignment": "Neutral Evil",
+      "habitats": [
+        "any"
+      ],
+      "armor_class": {
+        "value": 20,
+        "source": "non-specified"
+      },
+      "hit_points": 315,
+      "hit_point_formula": {
+        "raw": "42d8 + 126",
+        "quantity": 42,
+        "die_type": "d8",
+        "modifier": 126
+      },
+      "speeds": [
+        {
+          "mode": "walk",
+          "distance": 30,
+          "unit": "ft"
+        }
+      ],
+      "initiative": {
+        "bonus": 17,
+        "static_value": 27
+      },
+      "abilities": {
+        "str": {
+          "score": 11,
+          "modifier": 0,
+          "saving_throw": 0
+        },
+        "dex": {
+          "score": 16,
+          "modifier": 3,
+          "saving_throw": 10
+        },
+        "con": {
+          "score": 16,
+          "modifier": 3,
+          "saving_throw": 10
+        },
+        "int": {
+          "score": 21,
+          "modifier": 5,
+          "saving_throw": 12
+        },
+        "wis": {
+          "score": 14,
+          "modifier": 2,
+          "saving_throw": 9
+        },
+        "cha": {
+          "score": 16,
+          "modifier": 3,
+          "saving_throw": 3
+        }
+      },
+      "skills": [
+        {
+          "name": "Arcana",
+          "modifier": 19
+        },
+        {
+          "name": "History",
+          "modifier": 12
+        },
+        {
+          "name": "Insight",
+          "modifier": 9
+        },
+        {
+          "name": "Perception",
+          "modifier": 9
+        }
+      ],
+      "senses": [
+        {
+          "name": "Truesight",
+          "distance": 120,
+          "unit": "ft"
+        }
+      ],
+      "passive_perception": 19,
+      "languages": [
+        "All"
+      ],
+      "languages_text": "All",
+      "gear": [
+        "Component Pouch"
+      ],
+      "damage_resistances": [
+        "Cold",
+        "Lightning"
+      ],
+      "damage_immunities": [
+        "Necrotic",
+        "Poison"
+      ],
+      "condition_immunities": [
+        "Charmed",
+        "Exhaustion",
+        "Frightened",
+        "Paralyzed",
+        "Poisoned"
+      ],
+      "challenge": {
+        "rating": "21",
+        "xp": 33000,
+        "lair_xp": 41000,
+        "proficiency_bonus": 7
+      },
+      "features": [
+        {
+          "name": "Legendary Resistance",
+          "kind": "trait",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "uses": 4,
+            "lair_uses": 5
+          }
+        },
+        {
+          "name": "Spirit Jar",
+          "kind": "trait",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "reform_time_formula": {
+              "raw": "1d10",
+              "quantity": 1,
+              "die_type": "d10",
+              "modifier": 0
+            }
+          }
+        },
+        {
+          "name": "Multiattack",
+          "kind": "action",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "attack_count": 3,
+            "allowed_attacks": [
+              "Eldritch Burst",
+              "Paralyzing Touch"
+            ]
+          }
+        },
+        {
+          "name": "Eldritch Burst",
+          "kind": "action",
+          "text": "[source text omitted from public fixture]",
+          "attack": {
+            "attack_type": "melee_or_ranged",
+            "attack_roll_bonus": 12,
+            "reach": 5,
+            "reach_unit": "ft",
+            "range_normal": 120,
+            "damage": [
+              {
+                "average": 31,
+                "formula": {
+                  "raw": "4d12 + 5",
+                  "quantity": 4,
+                  "die_type": "d12",
+                  "modifier": 5
+                },
+                "damage_type": "Force"
+              }
+            ]
+          },
+          "damage_types": [
+            "Force"
+          ]
+        },
+        {
+          "name": "Paralyzing Touch",
+          "kind": "action",
+          "text": "[source text omitted from public fixture]",
+          "attack": {
+            "attack_type": "melee",
+            "attack_roll_bonus": 12,
+            "reach": 5,
+            "reach_unit": "ft",
+            "damage": [
+              {
+                "average": 15,
+                "formula": {
+                  "raw": "3d6 + 5",
+                  "quantity": 3,
+                  "die_type": "d6",
+                  "modifier": 5
+                },
+                "damage_type": "Cold"
+              }
+            ]
+          },
+          "damage_types": [
+            "Cold"
+          ],
+          "conditions_inflicted": [
+            "Paralyzed"
+          ]
+        },
+        {
+          "name": "Spellcasting",
+          "kind": "action",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "spellcasting_ability": "Intelligence",
+            "spell_save_dc": 20,
+            "spell_groups": [
+              {
+                "frequency": "at_will",
+                "spells": [
+                  "Detect Magic",
+                  "Detect Thoughts",
+                  "Dispel Magic",
+                  "Fireball",
+                  "Invisibility",
+                  "Lightning Bolt",
+                  "Mage Hand",
+                  "Prestidigitation"
+                ],
+                "notes": {
+                  "Fireball": "level 5 version",
+                  "Lightning Bolt": "level 5 version"
+                }
+              },
+              {
+                "frequency": "2_per_day_each",
+                "spells": [
+                  "Animate Dead",
+                  "Dimension Door",
+                  "Plane Shift"
+                ]
+              },
+              {
+                "frequency": "1_per_day_each",
+                "spells": [
+                  "Chain Lightning",
+                  "Finger of Death",
+                  "Power Word Kill",
+                  "Scrying"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "has_spellcasting": true,
+      "has_bonus_actions": false,
+      "bonus_actions": [],
+      "has_reactions": true,
+      "reactions": [
+        {
+          "name": "Protective Magic",
+          "kind": "reaction",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "spells": [
+              "Counterspell",
+              "Shield"
+            ],
+            "uses_spellcasting_ability": true
+          }
+        }
+      ],
+      "legendary_status": "legendary",
+      "legendary_resistance": {
+        "uses": 4,
+        "lair_uses": 5
+      },
+      "legendary_action_uses": {
+        "uses": 3,
+        "lair_uses": 4,
+        "regain_timing": "start_of_turn"
+      },
+      "has_lair_variant": true,
+      "legendary_actions": [
+        {
+          "name": "Deathly Teleport",
+          "kind": "legendary_action",
+          "text": "[source text omitted from public fixture]",
+          "damage": [
+            {
+              "average": 11,
+              "formula": {
+                "raw": "2d10",
+                "quantity": 2,
+                "die_type": "d10",
+                "modifier": 0
+              },
+              "damage_type": "Necrotic"
+            }
+          ],
+          "damage_types": [
+            "Necrotic"
+          ],
+          "metadata": {
+            "teleport_distance": 60,
+            "teleport_unit": "ft",
+            "damage_radius": 10,
+            "damage_radius_unit": "ft"
+          }
+        },
+        {
+          "name": "Disrupt Life",
+          "kind": "legendary_action",
+          "text": "[source text omitted from public fixture]",
+          "saving_throw": {
+            "ability": "Constitution",
+            "dc": 20,
+            "success": "half_damage",
+            "failure": "full_damage"
+          },
+          "damage": [
+            {
+              "average": 31,
+              "formula": {
+                "raw": "9d6",
+                "quantity": 9,
+                "die_type": "d6",
+                "modifier": 0
+              },
+              "damage_type": "Necrotic"
+            }
+          ],
+          "damage_types": [
+            "Necrotic"
+          ],
+          "metadata": {
+            "area": "20-foot Emanation",
+            "excluded_creature_type": "Undead",
+            "reuse_limit": "until_start_of_next_turn"
+          }
+        },
+        {
+          "name": "Frightening Gaze",
+          "kind": "legendary_action",
+          "text": "[source text omitted from public fixture]",
+          "metadata": {
+            "spells": [
+              "Fear"
+            ],
+            "uses_spellcasting_ability": true,
+            "reuse_limit": "until_start_of_next_turn"
+          }
+        }
+      ],
+      "lair_actions": [],
+      "content_flags": {
+        "has_image": true,
+        "has_lore": true
+      },
+      "damage_types_dealt": [
+        "Cold",
+        "Force",
+        "Necrotic"
+      ],
+      "conditions_inflicted": [
+        "Paralyzed"
+      ],
+      "tags": [
+        "srd-candidate",
+        "field-inventory"
+      ],
+      "source_specific_fields": {}
+    },
+    "page_span_text": "[redacted public fixture candidate text]",
+    "page_span_text_ref": null,
+    "sections": [
+      {
+        "label": "header",
+        "text": "[redacted fixture text: full header and defensive/stat rows identified]"
+      },
+      {
+        "label": "traits",
+        "text": "[redacted fixture text: legendary resistance and spirit-jar trait identified]"
+      },
+      {
+        "label": "actions",
+        "text": "[redacted fixture text: multiattack, attacks, and spellcasting action identified]"
+      },
+      {
+        "label": "reactions",
+        "text": "[redacted fixture text: one reaction identified]"
+      },
+      {
+        "label": "legendary_actions",
+        "text": "[redacted fixture text: legendary action uses and three options identified]"
+      }
+    ],
+    "start_marker": "LICH",
+    "end_marker": "LEGENDARY ACTIONS",
+    "raw_text_hash": "sha256:mm2024-p0196-lich-candidate-v1-redacted-text"
+  },
+  "location": {
+    "page_start": 196,
+    "page_end": 196,
+    "text_start_offset": 0,
+    "text_end_offset": null,
+    "bounding_boxes": [
+      {
+        "page": 196,
+        "x0": 0.02,
+        "y0": 0.02,
+        "x1": 0.98,
+        "y1": 0.98,
+        "unit": "page_ratio"
+      }
+    ]
+  },
+  "quality": {
+    "confidence": 0.93,
+    "text_quality": "redacted_fixture",
+    "segmentation_quality": "complete",
+    "warnings": [
+      {
+        "code": "dense_spellcasting_block",
+        "message": "Spellcasting groups are preserved in feature metadata."
+      }
+    ]
+  },
+  "normalization": {
+    "recommended_method": "structured_fields",
+    "attempt_count": 0,
+    "last_attempt_at": null
+  },
+  "audit": {
+    "created_at": "2026-06-11T06:00:00Z",
+    "created_by": "manual_fixture_generation",
+    "private_content": false,
+    "updated_at": null
+  }
+}

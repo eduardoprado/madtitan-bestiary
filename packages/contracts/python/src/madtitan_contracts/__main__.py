@@ -9,6 +9,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from madtitan_contracts.candidate import MonsterCandidate
 from madtitan_contracts.monster import MonsterOccurrence
 
 
@@ -24,7 +25,7 @@ def main(argv: list[str] | None = None) -> int:
 
     validate_parser = subparsers.add_parser(
         "validate",
-        help="Validate monster JSON fixture files against the MonsterOccurrence contract.",
+        help="Validate monster occurrence and candidate JSON fixture files.",
     )
     validate_parser.add_argument(
         "paths",
@@ -107,7 +108,7 @@ def validate_record(label: str, record: Any, summary: ValidationSummary) -> None
         return
 
     try:
-        monster = MonsterOccurrence.model_validate(record)
+        contract_name, display_name = validate_contract_record(record)
     except ValidationError as error:
         summary.failed += 1
         print(f"failed {label}")
@@ -116,7 +117,17 @@ def validate_record(label: str, record: Any, summary: ValidationSummary) -> None
         return
 
     summary.accepted += 1
-    print(f"accepted {label} ({monster.name})")
+    print(f"accepted {label} ({contract_name}: {display_name})")
+
+
+def validate_contract_record(record: dict[str, Any]) -> tuple[str, str]:
+    if "candidate_id" in record:
+        candidate = MonsterCandidate.model_validate(record)
+        display_name = candidate.candidate.name_hint or candidate.candidate_id
+        return "MonsterCandidate", display_name
+
+    monster = MonsterOccurrence.model_validate(record)
+    return "MonsterOccurrence", monster.name
 
 
 def format_validation_error(error: ValidationError) -> list[str]:
