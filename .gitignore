@@ -1,0 +1,71 @@
+# ---------------------------------------------------------------------------
+# DATA IS PRIVATE. CODE IS PUBLIC.
+# Nothing copyrighted (raw PDFs, extracted monster data, exports) may be
+# committed. Only SRD / CC-BY-4.0 sample fixtures are allowed in the repo.
+# ---------------------------------------------------------------------------
+
+# Raw source data & all extracted/derived data
+data/
+datasets/
+*.pdf
+*.parquet
+*.duckdb
+*.sqlite
+*.db
+extracted/
+quarantine/
+exports/
+
+# Allow explicitly-curated SRD/CC-BY sample fixtures
+!tests/fixtures/srd/**
+!**/fixtures/srd/**
+
+# Secrets & credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+**/profiles.yml          # dbt connection profiles (use a sample instead)
+.databrickscfg
+service-account*.json
+credentials*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.uv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+
+# dbt
+warehouse/target/
+warehouse/dbt_packages/
+warehouse/logs/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.log
