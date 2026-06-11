@@ -374,6 +374,102 @@
       "title": "DiceFormula",
       "type": "object"
     },
+    "ExtendedAttribute": {
+      "description": "Optional normalized attribute promoted from a source-specific field.",
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "status": {
+          "default": "source_provided",
+          "title": "Status",
+          "type": "string"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "key"
+      ],
+      "title": "ExtendedAttribute",
+      "type": "object"
+    },
     "FeatureOption": {
       "properties": {
         "label": {
@@ -1207,6 +1303,13 @@
       "minimum": 0.0,
       "title": "Confidence",
       "type": "number"
+    },
+    "extended_attributes": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ExtendedAttribute"
+      },
+      "title": "Extended Attributes",
+      "type": "object"
     },
     "source_specific_fields": {
       "title": "Source Specific Fields",

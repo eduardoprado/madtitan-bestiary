@@ -56,6 +56,18 @@ class ContentFlags(BaseModel):
     has_lore: bool = False
 
 
+class ExtendedAttribute(BaseModel):
+    """Optional normalized attribute promoted from a source-specific field."""
+
+    key: str
+    label: str | None = None
+    value: str | int | float | bool | list[str] | None = None
+    status: str = "source_provided"
+    source: str | None = None
+    confidence: float | None = Field(default=None, ge=0, le=1)
+    notes: str | None = None
+
+
 class DiceFormula(BaseModel):
     """Parsed dice expression such as 3d10+6."""
 
@@ -235,5 +247,6 @@ class MonsterOccurrence(BaseModel):
     tags: list[str] = Field(default_factory=list)
     provenance: SourceProvenance
     confidence: float = Field(ge=0, le=1)
+    extended_attributes: dict[str, ExtendedAttribute] = Field(default_factory=dict)
     source_specific_fields: dict[str, object] = Field(default_factory=dict)
     raw_json: dict[str, object] = Field(default_factory=dict)

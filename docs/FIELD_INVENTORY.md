@@ -4,6 +4,39 @@ This document records fields discovered while reviewing representative monsters.
 goal is to promote repeated, query-worthy fields into typed schema fields while keeping
 rare or source-specific data in `source_specific_fields` until it proves reusable.
 
+## Field Promotion Rule
+
+Not every source-specific field should become a first-class column immediately.
+
+- Use `source_specific_fields` for raw, rare, or not-yet-understood source quirks.
+- Use `extended_attributes` when a source-specific concept is valuable enough to carry
+  in the final `MonsterOccurrence`, but not universal enough to deserve a top-level
+  typed field yet.
+- Promote an `extended_attributes` entry to a top-level typed field only after it
+  proves broadly useful across sources, app filters, or analytics.
+
+Example: *Flee Mortals* has a source-specific `creature_role` concept with values such
+as `ambusher`, `artillery`, `brute`, `controller`, `leader`, `minion`, `retainer`,
+`skirmisher`, `soldier`, `solo`, and `support`. For sources that do not provide this
+field, the final occurrence can still include:
+
+```json
+{
+  "extended_attributes": {
+    "creature_role": {
+      "key": "creature_role",
+      "label": "Creature Role",
+      "value": "uncategorized",
+      "status": "uncategorized",
+      "source": "not_source_provided"
+    }
+  }
+}
+```
+
+Later enrichment scripts can infer or assign this value without changing the base
+monster contract.
+
 ## Dire Wolf - Monster Manual 2024, page 352
 
 Source/provenance fields identified:

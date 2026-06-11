@@ -48,6 +48,13 @@ It identifies likely monster boundaries, page spans, name hints, section text, a
 candidate-level confidence. A candidate can still be messy, incomplete, or wrong. It is
 not trusted structured data.
 
+The extraction workflow is intentionally source-by-source. A single bestiary PDF will
+usually follow one consistent stat-block pattern, while different PDFs may use
+different headings, ordering, layouts, action labels, or optional sections. The
+`MonsterCandidate` contract should therefore stay broad enough to capture source-level
+variation and debugging context. The final `MonsterOccurrence` contract remains the
+strict, normalized target.
+
 ### 3. Candidate Normalization
 
 Input: `MonsterCandidate`.
@@ -60,6 +67,16 @@ conditions, spellcasting metadata, legendary actions, habitats, and provenance.
 
 This step may be deterministic, heuristic, LLM-assisted, or manual, but it must record
 the normalizer version and method.
+
+Source-specific fields follow a promotion path during normalization:
+
+- Keep raw, rare, or source-only oddities in `source_specific_fields`.
+- Promote useful source-specific concepts to `extended_attributes` when they should
+  travel with the final `MonsterOccurrence` as optional normalized data.
+- Use `uncategorized`, `not_source_provided`, or another explicit status when the
+  concept is useful globally but missing from a particular source.
+- Promote to a top-level typed field only after the concept becomes common enough for
+  core validation, app filtering, or analytics.
 
 ### 4. Contract Validation
 
@@ -173,16 +190,33 @@ Recommended structure:
     "page_end": 255,
     "page_labels": ["255"]
   },
+  "source_format": {
+    "profile_id": "mm2024-statblock",
+    "profile_version": "v1",
+    "statblock_family": "dnd_2024",
+    "layout_type": "two_column_card",
+    "expected_single_page": true,
+    "column_count": 2,
+    "section_order": ["header", "traits", "actions", "legendary_actions"],
+    "heading_patterns": ["uppercase_red_heading"],
+    "known_variations": ["spellcasting_action", "lair_variant_xp"],
+    "notes": "Observed source-level conventions for this PDF.",
+    "metadata": {}
+  },
   "lineage": {
     "extracted_page_text_ids": ["mm2024-filehash-p0255-text-v1"],
+    "extraction_methods": ["pdf_text_layer"],
     "segmentation_run_id": "segment-run-2026-06-11T05:10:00Z",
     "segmentation_method": "heading_and_statblock_rules",
-    "segmenter_version": "segmenter-v0.1.0"
+    "segmenter_version": "segmenter-v0.1.0",
+    "parent_candidate_id": null,
+    "repair_source_quarantine_record_id": null
   },
   "candidate": {
     "name_hint": "Adult Red Dragon",
     "creature_type_hint": "dragon",
     "page_span_text": "private candidate text",
+    "page_span_text_ref": null,
     "sections": [
       {
         "label": "header",
@@ -232,7 +266,8 @@ Recommended structure:
   "audit": {
     "created_at": "2026-06-11T05:10:00Z",
     "created_by": "candidate_segmentation",
-    "private_content": true
+    "private_content": true,
+    "updated_at": null
   }
 }
 ```
@@ -242,11 +277,22 @@ Field guidance:
 - `candidate_id`: stable identifier for this candidate version.
 - `status`: usually `pending`, `accepted`, `quarantined`, `superseded`, or `ignored`.
 - `source`: book/file/page identity needed for provenance and debugging.
+- `source_format`: source-level stat-block conventions. This is where per-PDF
+  differences belong: layout family, expected section order, heading patterns,
+  single-page vs multi-page expectations, and known variations.
 - `lineage`: links back to extracted text and the segmentation code/run that produced
   the candidate.
+- `lineage.extraction_methods`: extraction methods used upstream, such as
+  `pdf_text_layer`, `local_ocr`, `llm_vision_text`, or `manual_transcription`.
+- `lineage.parent_candidate_id`: previous candidate if this candidate is a revised
+  version.
+- `lineage.repair_source_quarantine_record_id`: quarantine record that caused this
+  repaired candidate to be created.
 - `candidate.name_hint`: best-effort monster name; not trusted until normalization and
   validation succeed.
 - `candidate.page_span_text`: private raw candidate text. Do not commit real book text.
+- `candidate.page_span_text_ref`: storage reference for private text when the raw body
+  is too large or sensitive to copy inline.
 - `candidate.sections`: optional labeled chunks that make normalization easier.
 - `location`: text offsets and optional bounding boxes for visual QA and page-image
   repair.

@@ -1,0 +1,626 @@
+{
+  "$defs": {
+    "CandidateAudit": {
+      "properties": {
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "created_by": {
+          "title": "Created By",
+          "type": "string"
+        },
+        "private_content": {
+          "default": true,
+          "title": "Private Content",
+          "type": "boolean"
+        },
+        "updated_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Updated At"
+        }
+      },
+      "required": [
+        "created_at",
+        "created_by"
+      ],
+      "title": "CandidateAudit",
+      "type": "object"
+    },
+    "CandidateBoundingBox": {
+      "properties": {
+        "page": {
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        },
+        "x0": {
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "title": "Y1",
+          "type": "number"
+        },
+        "unit": {
+          "default": "page_ratio",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "page",
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "CandidateBoundingBox",
+      "type": "object"
+    },
+    "CandidateLineage": {
+      "description": "How this candidate was created and what earlier records it came from.",
+      "properties": {
+        "extracted_page_text_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Extracted Page Text Ids",
+          "type": "array"
+        },
+        "extraction_methods": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Extraction Methods",
+          "type": "array"
+        },
+        "segmentation_run_id": {
+          "title": "Segmentation Run Id",
+          "type": "string"
+        },
+        "segmentation_method": {
+          "title": "Segmentation Method",
+          "type": "string"
+        },
+        "segmenter_version": {
+          "title": "Segmenter Version",
+          "type": "string"
+        },
+        "parent_candidate_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Candidate Id"
+        },
+        "repair_source_quarantine_record_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repair Source Quarantine Record Id"
+        }
+      },
+      "required": [
+        "segmentation_run_id",
+        "segmentation_method",
+        "segmenter_version"
+      ],
+      "title": "CandidateLineage",
+      "type": "object"
+    },
+    "CandidateLocation": {
+      "properties": {
+        "page_start": {
+          "minimum": 1,
+          "title": "Page Start",
+          "type": "integer"
+        },
+        "page_end": {
+          "minimum": 1,
+          "title": "Page End",
+          "type": "integer"
+        },
+        "text_start_offset": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text Start Offset"
+        },
+        "text_end_offset": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text End Offset"
+        },
+        "bounding_boxes": {
+          "items": {
+            "$ref": "#/$defs/CandidateBoundingBox"
+          },
+          "title": "Bounding Boxes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "page_start",
+        "page_end"
+      ],
+      "title": "CandidateLocation",
+      "type": "object"
+    },
+    "CandidateNormalizationState": {
+      "properties": {
+        "recommended_method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recommended Method"
+        },
+        "attempt_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Attempt Count",
+          "type": "integer"
+        },
+        "last_attempt_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Attempt At"
+        }
+      },
+      "title": "CandidateNormalizationState",
+      "type": "object"
+    },
+    "CandidatePayload": {
+      "description": "The private candidate text plus best-effort hints from segmentation.",
+      "properties": {
+        "name_hint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name Hint"
+        },
+        "creature_type_hint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Creature Type Hint"
+        },
+        "page_span_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page Span Text"
+        },
+        "page_span_text_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page Span Text Ref"
+        },
+        "sections": {
+          "items": {
+            "$ref": "#/$defs/CandidateSection"
+          },
+          "title": "Sections",
+          "type": "array"
+        },
+        "start_marker": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Marker"
+        },
+        "end_marker": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Marker"
+        },
+        "raw_text_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Text Hash"
+        }
+      },
+      "title": "CandidatePayload",
+      "type": "object"
+    },
+    "CandidateQuality": {
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "text_quality": {
+          "title": "Text Quality",
+          "type": "string"
+        },
+        "segmentation_quality": {
+          "title": "Segmentation Quality",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "$ref": "#/$defs/CandidateWarning"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "confidence",
+        "text_quality",
+        "segmentation_quality"
+      ],
+      "title": "CandidateQuality",
+      "type": "object"
+    },
+    "CandidateSection": {
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "text"
+      ],
+      "title": "CandidateSection",
+      "type": "object"
+    },
+    "CandidateSource": {
+      "description": "Book, file, and page identity for a candidate segment.",
+      "properties": {
+        "source_book_id": {
+          "title": "Source Book Id",
+          "type": "string"
+        },
+        "book_title": {
+          "title": "Book Title",
+          "type": "string"
+        },
+        "ruleset": {
+          "title": "Ruleset",
+          "type": "string"
+        },
+        "source_file_id": {
+          "title": "Source File Id",
+          "type": "string"
+        },
+        "source_file_checksum": {
+          "title": "Source File Checksum",
+          "type": "string"
+        },
+        "page_start": {
+          "minimum": 1,
+          "title": "Page Start",
+          "type": "integer"
+        },
+        "page_end": {
+          "minimum": 1,
+          "title": "Page End",
+          "type": "integer"
+        },
+        "page_labels": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Page Labels",
+          "type": "array"
+        }
+      },
+      "required": [
+        "source_book_id",
+        "book_title",
+        "ruleset",
+        "source_file_id",
+        "source_file_checksum",
+        "page_start",
+        "page_end"
+      ],
+      "title": "CandidateSource",
+      "type": "object"
+    },
+    "CandidateWarning": {
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "default": "warning",
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "CandidateWarning",
+      "type": "object"
+    },
+    "SourceFormatProfile": {
+      "description": "Source-specific stat-block conventions observed for this candidate.",
+      "properties": {
+        "profile_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Profile Id"
+        },
+        "profile_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Profile Version"
+        },
+        "statblock_family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Statblock Family"
+        },
+        "layout_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Layout Type"
+        },
+        "expected_single_page": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Single Page"
+        },
+        "column_count": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Column Count"
+        },
+        "section_order": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Section Order",
+          "type": "array"
+        },
+        "heading_patterns": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Heading Patterns",
+          "type": "array"
+        },
+        "known_variations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Known Variations",
+          "type": "array"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "type": "object"
+        }
+      },
+      "title": "SourceFormatProfile",
+      "type": "object"
+    }
+  },
+  "description": "A segmented, not-yet-normalized monster-like stat block candidate.",
+  "properties": {
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "status": {
+      "default": "pending",
+      "enum": [
+        "pending",
+        "accepted",
+        "quarantined",
+        "superseded",
+        "ignored"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/CandidateSource"
+    },
+    "source_format": {
+      "$ref": "#/$defs/SourceFormatProfile"
+    },
+    "lineage": {
+      "$ref": "#/$defs/CandidateLineage"
+    },
+    "candidate": {
+      "$ref": "#/$defs/CandidatePayload"
+    },
+    "location": {
+      "$ref": "#/$defs/CandidateLocation"
+    },
+    "quality": {
+      "$ref": "#/$defs/CandidateQuality"
+    },
+    "normalization": {
+      "$ref": "#/$defs/CandidateNormalizationState"
+    },
+    "audit": {
+      "$ref": "#/$defs/CandidateAudit"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "source",
+    "lineage",
+    "candidate",
+    "location",
+    "quality",
+    "audit"
+  ],
+  "title": "MonsterCandidate",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://madtitan.local/schemas/monster_candidate.schema.json"
+}

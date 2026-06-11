@@ -38,6 +38,7 @@ def test_dire_wolf_structure_fixture_matches_contract() -> None:
     assert monster.lair_actions == []
     assert monster.damage_types_dealt == ["Piercing"]
     assert monster.conditions_inflicted == ["Prone"]
+    assert monster.extended_attributes == {}
 
 
 def test_lich_structure_fixture_matches_contract() -> None:
@@ -174,3 +175,31 @@ def test_reloader_synthetic_fixture_matches_contract() -> None:
         "Restrained",
         "Unconscious",
     ]
+
+
+def test_monster_occurrence_supports_promoted_extended_attributes() -> None:
+    fixture_path = (
+        Path(__file__).parents[4] / "samples" / "fixtures" / "srd" / "dire_wolf_2024_structure.json"
+    )
+
+    payload = MonsterOccurrence.model_validate_json(fixture_path.read_text()).model_dump(
+        by_alias=True,
+        mode="json",
+    )
+    payload["extended_attributes"] = {
+        "creature_role": {
+            "key": "creature_role",
+            "label": "Creature Role",
+            "value": "uncategorized",
+            "status": "uncategorized",
+            "source": "not_source_provided",
+            "confidence": None,
+            "notes": "Placeholder for sources that do not provide role data.",
+        }
+    }
+
+    monster = MonsterOccurrence.model_validate(payload)
+
+    role = monster.extended_attributes["creature_role"]
+    assert role.value == "uncategorized"
+    assert role.status == "uncategorized"
