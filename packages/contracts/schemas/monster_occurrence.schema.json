@@ -12,6 +12,37 @@
     "challenge_rating": { "type": ["string", "null"] },
     "armor_class": { "type": ["integer", "null"], "minimum": 0 },
     "hit_points": { "type": ["integer", "null"], "minimum": 0 },
+    "abilities": {
+      "type": ["object", "null"],
+      "required": [
+        "str_score",
+        "dex_score",
+        "con_score",
+        "int_score",
+        "wis_score",
+        "cha_score"
+      ],
+      "properties": {
+        "str_score": { "type": "integer", "minimum": 1, "maximum": 30 },
+        "dex_score": { "type": "integer", "minimum": 1, "maximum": 30 },
+        "con_score": { "type": "integer", "minimum": 1, "maximum": 30 },
+        "int_score": { "type": "integer", "minimum": 1, "maximum": 30 },
+        "wis_score": { "type": "integer", "minimum": 1, "maximum": 30 },
+        "cha_score": { "type": "integer", "minimum": 1, "maximum": 30 }
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "kind", "text"],
+        "properties": {
+          "name": { "type": "string" },
+          "kind": { "type": "string" },
+          "text": { "type": "string" }
+        }
+      }
+    },
     "tags": {
       "type": "array",
       "items": { "type": "string" }
