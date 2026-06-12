@@ -20,26 +20,32 @@ real extracted source text out of git.
 
 Goal: load user-provided book metadata and extraction settings before touching the PDF.
 
-Missing work:
+Status: v1 complete.
 
-- Define the local manifest file format for source books.
-- Load `source_book_id`, `book_title`, `ruleset`, file path/ref, checksum, and
-  extraction settings into `SourceBook`.
-- Compute/check source file checksum.
-- Validate that required user-provided metadata exists before extraction starts.
-- Keep `book_title` and `ruleset` manifest-driven, not OCR/LLM-inferred.
+Remaining future refinements:
+
+- Add source-specific extraction settings only after real PDFs prove they are needed.
+- Add optional remote/private object references when the storage layer exists.
 
 Plan:
 
-- Start with a local JSON manifest fixture.
-- Add a loader that emits validated `SourceBook` records.
-- Fail fast when the PDF path/ref is missing or the checksum does not match.
-- Later, connect this to the private local mirror and optional R2 references.
+- Use `uv run madtitan-pipelines source-manifest create` before each new extraction.
+- Keep the generated manifests in ignored `data/source_manifests/` unless they are
+  synthetic/redacted fixtures.
+- Use `uv run madtitan-pipelines source-manifest validate data/source_manifests` before
+  extraction.
+- Use `uv run madtitan-pipelines source-manifest list` to inspect registered sources.
+- Use `LOCAL_PDF_MIRROR` for relative PDF paths inside the private local bestiary folder.
+- Later, connect this to optional R2 references.
 
 Acceptance:
 
-- A real PDF can be registered without extracting text.
-- The loader can validate all source metadata with the contracts package.
+- A real PDF can be registered without extracting text. Done for local manifests.
+- The loader can validate all source metadata with the contracts package. Done.
+- The loader can list registered manifests. Done.
+- The loader refuses duplicate `source_book_id` values. Done.
+- The loader refuses accidental manifest overwrites. Done.
+- Relative PDF paths can resolve through `LOCAL_PDF_MIRROR`. Done.
 - No raw PDF content is copied into repo-tracked files.
 
 ## 2. PDF Page Inventory

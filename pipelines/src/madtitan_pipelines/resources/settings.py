@@ -6,6 +6,7 @@ class PipelineSettings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    database_url: str = "postgresql://madtitan:madtitan@localhost:5432/madtitan_bestiary"
+    database_url: str | None = None
     local_pdf_mirror: str | None = None
+    source_manifest_path: str = "data/source_manifests"
     r2_bucket_name: str | None = None

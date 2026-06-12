@@ -608,6 +608,7 @@ source = { editable = "pipelines" }
 dependencies = [
     { name = "dagster" },
     { name = "dagster-postgres" },
+    { name = "madtitan-contracts" },
     { name = "pdfplumber" },
     { name = "psycopg", extra = ["binary"] },
     { name = "pydantic" },
@@ -626,6 +627,7 @@ dev = [
 requires-dist = [
     { name = "dagster" },
     { name = "dagster-postgres" },
+    { name = "madtitan-contracts", editable = "packages/contracts/python" },
     { name = "pdfplumber" },
     { name = "psycopg", extras = ["binary"] },
     { name = "pydantic", specifier = ">=2" },
