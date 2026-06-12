@@ -128,6 +128,9 @@ class PageContentDetection(BaseModel):
     kind: DetectionKind
     monster_name_hint: str | None = None
     bbox: PageBoundingBox | None = None
+    text: str | None = None
+    text_ref: str | None = None
+    text_hash: str | None = None
     text_span_ref: str | None = None
     block_ids: list[str] = Field(default_factory=list)
     confidence: float = Field(ge=0, le=1)

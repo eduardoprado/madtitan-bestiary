@@ -48,7 +48,7 @@ which extracted page text IDs to use.
 
 LLM or vision-assisted image/lore observations are stored as `PageContentAnnotation`
 records. These annotations are page-level hints; they do not write directly to
-`MonsterOccurrence.content_flags`.
+`MonsterOccurrence.content_flags` or `MonsterOccurrence.lore`.
 
 ### 2. Candidate Segmentation
 
@@ -81,7 +81,8 @@ Output: `MonsterOccurrenceDraft`.
 
 This step converts a candidate into the shape expected by the shared monster contract.
 It extracts and normalizes fields such as AC, HP, speeds, abilities, attacks, damage,
-conditions, spellcasting metadata, legendary actions, habitats, and provenance.
+conditions, spellcasting metadata, legendary actions, habitats, accepted lore, and
+provenance.
 
 This step may be deterministic, heuristic, LLM-assisted, or manual, but it must record
 the normalizer version and method.
@@ -101,6 +102,16 @@ Source-specific fields follow a promotion path during normalization:
   concept is useful globally but missing from a particular source.
 - Promote to a top-level typed field only after the concept becomes common enough for
   core validation, app filtering, or analytics.
+
+Lore has two representations:
+
+- `PageContentAnnotation` stores the extraction clue: "this page appears to contain
+  lore for this monster name hint."
+- `MonsterOccurrence.lore` stores the accepted decision: "this source-specific monster
+  occurrence has this lore text/ref."
+
+This keeps extraction evidence separate from the clean occurrence data used by the app
+and warehouse.
 
 ### 4. Inference and Enrichment
 
@@ -345,6 +356,9 @@ Recommended fields:
     {
       "kind": "monster_lore",
       "monster_name_hint": "Adult Red Dragon",
+      "text": null,
+      "text_ref": "private://monster-lore/mm2024/adult-red-dragon/p0255/lore-v1.txt",
+      "text_hash": "sha256:...",
       "text_span_ref": "private://extracted-text/mm2024/p0255/lore-span-v1",
       "block_ids": ["mm2024-p0255-b-lore"],
       "confidence": 0.82,
@@ -358,6 +372,11 @@ Recommended fields:
 
 These detections are hints. Candidate Segmentation and Candidate Normalization decide
 whether they map to a final accepted monster occurrence.
+
+Image detections use `bbox` to locate the source image region on the page. A future
+image extraction step can render the PDF page, crop the detected bbox, store the image
+asset in R2/S3-style object storage, and save only the resulting image reference and
+metadata in the database.
 
 ### MonsterCandidate
 
@@ -523,6 +542,29 @@ Contract wrapper:
 
 The `monster` payload is what Contract Validation checks.
 
+Accepted occurrence lore should be represented in the `monster` payload as:
+
+```json
+{
+  "content_flags": {
+    "has_lore": true
+  },
+  "lore": {
+    "text": null,
+    "text_ref": "private://monster-lore/mm2024/adult-red-dragon/p0255/lore-v1.txt",
+    "text_hash": "sha256:...",
+    "source_page_start": 255,
+    "source_page_end": 255,
+    "block_ids": ["mm2024-p0255-b-lore"],
+    "confidence": 0.9,
+    "notes": "Accepted lore associated with this source-specific occurrence."
+  }
+}
+```
+
+Inline `lore.text` is allowed for synthetic, redacted, or licensed fixtures. Real
+private lore should use `text_ref`.
+
 Current implementation:
 
 - `normalize_candidate(candidate)` returns a `MonsterOccurrenceDraft` when
@@ -598,3 +640,11 @@ Objects:
 - `MonsterOccurrenceDraft`
 - `MonsterOccurrence`
 - `QuarantineRecord`
+
+Future pipeline objects:
+
+- `MonsterImageAsset`: cropped monster image asset generated from a page image bbox,
+  stored in object storage, and linked back to the accepted monster occurrence.
+- `MonsterRelationship`: relationship/graph edge connecting monster identities or
+  occurrences, such as same-monster renditions across books or lore/mechanical
+  associations between different monsters.

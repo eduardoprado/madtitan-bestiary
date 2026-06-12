@@ -542,7 +542,18 @@
         "field-inventory",
         "non-srd-transform"
       ],
-      "source_specific_fields": {}
+      "source_specific_fields": {},
+      "lore": {
+        "text": "[synthetic lore text omitted from public fixture]",
+        "text_hash": "sha256:synthetic-reloader-lore-v1",
+        "source_page_start": 1,
+        "source_page_end": 1,
+        "block_ids": [
+          "synthetic-p0001-b-lore"
+        ],
+        "confidence": 1.0,
+        "notes": "Synthetic lore associated with the Reloader fixture."
+      }
     },
     "page_span_text": "[redacted public fixture candidate text]",
     "page_span_text_ref": null,

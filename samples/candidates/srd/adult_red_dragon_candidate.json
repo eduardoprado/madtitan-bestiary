@@ -370,7 +370,18 @@
         "srd-candidate",
         "field-inventory"
       ],
-      "source_specific_fields": {}
+      "source_specific_fields": {},
+      "lore": {
+        "text_ref": "private://monster-lore/mm2024/adult-red-dragon/p0255/lore-v1.txt",
+        "text_hash": "sha256:mm2024-adult-red-dragon-lore-private-v1",
+        "source_page_start": 255,
+        "source_page_end": 255,
+        "block_ids": [
+          "mm2024-p0255-b-lore"
+        ],
+        "confidence": 0.9,
+        "notes": "Accepted lore associated with this source-specific Adult Red Dragon occurrence."
+      }
     },
     "page_span_text": "[redacted public fixture candidate text]",
     "page_span_text_ref": null,

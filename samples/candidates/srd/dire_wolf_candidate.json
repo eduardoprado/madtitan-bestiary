@@ -193,7 +193,8 @@
         "srd-candidate",
         "field-inventory"
       ],
-      "source_specific_fields": {}
+      "source_specific_fields": {},
+      "lore": null
     },
     "page_span_text": "[redacted public fixture candidate text]",
     "page_span_text_ref": null,

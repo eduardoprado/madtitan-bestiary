@@ -4,7 +4,10 @@
   "creature_type": "dragon",
   "creature_group": "chromatic",
   "alignment": "Chaotic Evil",
-  "habitats": ["hill", "mountain"],
+  "habitats": [
+    "hill",
+    "mountain"
+  ],
   "armor_class": {
     "value": 19,
     "source": "non-specified"
@@ -92,11 +95,16 @@
     }
   ],
   "passive_perception": 23,
-  "languages": ["Common", "Draconic"],
+  "languages": [
+    "Common",
+    "Draconic"
+  ],
   "languages_text": "Common, Draconic",
   "gear": [],
   "damage_resistances": [],
-  "damage_immunities": ["Fire"],
+  "damage_immunities": [
+    "Fire"
+  ],
   "condition_immunities": [],
   "challenge": {
     "rating": "17",
@@ -120,7 +128,9 @@
       "text": "[source text omitted from public fixture]",
       "metadata": {
         "attack_count": 3,
-        "allowed_attacks": ["Rend"],
+        "allowed_attacks": [
+          "Rend"
+        ],
         "replacement": {
           "replace_count": 1,
           "feature": "Spellcasting",
@@ -160,7 +170,10 @@
           }
         ]
       },
-      "damage_types": ["Slashing", "Fire"]
+      "damage_types": [
+        "Slashing",
+        "Fire"
+      ]
     },
     {
       "name": "Fire Breath",
@@ -195,7 +208,9 @@
           "damage_type": "Fire"
         }
       ],
-      "damage_types": ["Fire"]
+      "damage_types": [
+        "Fire"
+      ]
     },
     {
       "name": "Spellcasting",
@@ -209,14 +224,20 @@
         "spell_groups": [
           {
             "frequency": "at_will",
-            "spells": ["Command", "Detect Magic", "Scorching Ray"],
+            "spells": [
+              "Command",
+              "Detect Magic",
+              "Scorching Ray"
+            ],
             "notes": {
               "Command": "level 2 version"
             }
           },
           {
             "frequency": "1_per_day",
-            "spells": ["Fireball"]
+            "spells": [
+              "Fireball"
+            ]
           }
         ]
       }
@@ -244,7 +265,9 @@
       "kind": "legendary_action",
       "text": "[source text omitted from public fixture]",
       "metadata": {
-        "spells": ["Command"],
+        "spells": [
+          "Command"
+        ],
         "spell_notes": {
           "Command": "level 2 version"
         },
@@ -257,7 +280,9 @@
       "kind": "legendary_action",
       "text": "[source text omitted from public fixture]",
       "metadata": {
-        "spells": ["Scorching Ray"],
+        "spells": [
+          "Scorching Ray"
+        ],
         "uses_spellcasting": true,
         "reuse_limit": "until_start_of_next_turn"
       }
@@ -277,9 +302,15 @@
     "has_image": true,
     "has_lore": true
   },
-  "damage_types_dealt": ["Fire", "Slashing"],
+  "damage_types_dealt": [
+    "Fire",
+    "Slashing"
+  ],
   "conditions_inflicted": [],
-  "tags": ["srd-candidate", "field-inventory"],
+  "tags": [
+    "srd-candidate",
+    "field-inventory"
+  ],
   "provenance": {
     "source_id": "mm2024-p255-adult-red-dragon",
     "source_title": "Monster Manual 2024",
@@ -292,5 +323,16 @@
   },
   "confidence": 1,
   "source_specific_fields": {},
-  "raw_json": {}
+  "raw_json": {},
+  "lore": {
+    "text_ref": "private://monster-lore/mm2024/adult-red-dragon/p0255/lore-v1.txt",
+    "text_hash": "sha256:mm2024-adult-red-dragon-lore-private-v1",
+    "source_page_start": 255,
+    "source_page_end": 255,
+    "block_ids": [
+      "mm2024-p0255-b-lore"
+    ],
+    "confidence": 0.9,
+    "notes": "Accepted lore associated with this source-specific Adult Red Dragon occurrence."
+  }
 }

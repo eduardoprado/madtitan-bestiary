@@ -262,3 +262,12 @@ closed yet because more values will appear during field inventory.
 - Add a spells table and link monster spellcasting features to canonical spell records.
   Spell-derived damage types and conditions should be added to monster derived fields
   only after this link exists.
+- Add a `MonsterImageAsset` pipeline step after lore/text extraction is stable. It
+  should use `monster_image` detection bounding boxes to crop source PDF page renders,
+  store the generated JPG/PNG in R2 or another object store, and save the object
+  reference, source bbox, page provenance, hash, and crop metadata linked to the
+  accepted monster occurrence.
+- Add a monster relationship layer for later pipeline steps. It should support both
+  same-monster associations across different books or rulesets and explicit
+  relationships between different monsters, such as creator/created, variant,
+  related lore, similar role, or manual curation.

@@ -54,6 +54,10 @@ def test_lich_structure_fixture_matches_contract() -> None:
     assert monster.habitats == ["any"]
     assert monster.content_flags.has_image is True
     assert monster.content_flags.has_lore is True
+    assert monster.lore is not None
+    assert monster.lore.text_ref == "private://monster-lore/mm2024/lich/p0196/lore-v1.txt"
+    assert monster.lore.source_page_start == 196
+    assert monster.lore.block_ids == ["mm2024-p0196-b-lore"]
     assert monster.challenge is not None
     assert monster.challenge.rating == "21"
     assert monster.challenge.xp == 33000
@@ -97,6 +101,12 @@ def test_adult_red_dragon_structure_fixture_matches_contract() -> None:
     assert monster.habitats == ["hill", "mountain"]
     assert monster.content_flags.has_image is True
     assert monster.content_flags.has_lore is True
+    assert monster.lore is not None
+    assert (
+        monster.lore.text_ref
+        == "private://monster-lore/mm2024/adult-red-dragon/p0255/lore-v1.txt"
+    )
+    assert monster.lore.text_hash == "sha256:mm2024-adult-red-dragon-lore-private-v1"
     assert monster.challenge is not None
     assert monster.challenge.rating == "17"
     assert monster.challenge.lair_xp == 20000
@@ -139,6 +149,8 @@ def test_reloader_synthetic_fixture_matches_contract() -> None:
     assert monster.creature_type == "aberration"
     assert monster.creature_group == "debuggers"
     assert monster.habitats == ["underdark"]
+    assert monster.lore is not None
+    assert monster.lore.text == "[synthetic lore text omitted from public fixture]"
     assert monster.condition_immunities == ["Prone"]
     assert monster.has_bonus_actions is True
     assert monster.has_reactions is False

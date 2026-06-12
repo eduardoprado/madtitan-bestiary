@@ -4,7 +4,9 @@
   "creature_type": "aberration",
   "creature_group": "debuggers",
   "alignment": "Lawful Evil",
-  "habitats": ["underdark"],
+  "habitats": [
+    "underdark"
+  ],
   "armor_class": {
     "value": 17,
     "source": "non-specified"
@@ -79,12 +81,17 @@
     }
   ],
   "passive_perception": 21,
-  "languages": ["Deep Speech", "Undercommon"],
+  "languages": [
+    "Deep Speech",
+    "Undercommon"
+  ],
   "languages_text": "Deep Speech, Undercommon",
   "gear": [],
   "damage_resistances": [],
   "damage_immunities": [],
-  "condition_immunities": ["Prone"],
+  "condition_immunities": [
+    "Prone"
+  ],
   "challenge": {
     "rating": "13",
     "xp": 10000,
@@ -132,7 +139,9 @@
           }
         ]
       },
-      "damage_types": ["Piercing"]
+      "damage_types": [
+        "Piercing"
+      ]
     },
     {
       "name": "Patch Rays",
@@ -167,8 +176,12 @@
               "damage_type": "Psychic"
             }
           ],
-          "damage_types": ["Psychic"],
-          "conditions_inflicted": ["Charmed"]
+          "damage_types": [
+            "Psychic"
+          ],
+          "conditions_inflicted": [
+            "Charmed"
+          ]
         },
         {
           "label": "2",
@@ -179,7 +192,9 @@
             "dc": 15,
             "failure": "condition"
           },
-          "conditions_inflicted": ["Paralyzed"],
+          "conditions_inflicted": [
+            "Paralyzed"
+          ],
           "metadata": {
             "repeat_save": "end_of_turn",
             "automatic_end": "after_1_minute"
@@ -207,8 +222,12 @@
               "damage_type": "Psychic"
             }
           ],
-          "damage_types": ["Psychic"],
-          "conditions_inflicted": ["Frightened"]
+          "damage_types": [
+            "Psychic"
+          ],
+          "conditions_inflicted": [
+            "Frightened"
+          ]
         },
         {
           "label": "4",
@@ -232,7 +251,9 @@
               "damage_type": "Necrotic"
             }
           ],
-          "damage_types": ["Necrotic"],
+          "damage_types": [
+            "Necrotic"
+          ],
           "metadata": {
             "speed_multiplier": 0.5,
             "blocks_reactions": true,
@@ -261,8 +282,12 @@
               "damage_type": "Poison"
             }
           ],
-          "damage_types": ["Poison"],
-          "conditions_inflicted": ["Poisoned"],
+          "damage_types": [
+            "Poison"
+          ],
+          "conditions_inflicted": [
+            "Poisoned"
+          ],
           "metadata": {
             "blocks_hit_point_regain": true
           }
@@ -276,7 +301,9 @@
             "dc": 15,
             "failure": "forced_movement_and_condition"
           },
-          "conditions_inflicted": ["Restrained"],
+          "conditions_inflicted": [
+            "Restrained"
+          ],
           "metadata": {
             "forced_movement": 25,
             "forced_movement_unit": "ft",
@@ -292,9 +319,14 @@
             "dc": 15,
             "failure": "condition"
           },
-          "conditions_inflicted": ["Unconscious"],
+          "conditions_inflicted": [
+            "Unconscious"
+          ],
           "metadata": {
-            "automatic_success_creature_types": ["construct", "undead"],
+            "automatic_success_creature_types": [
+              "construct",
+              "undead"
+            ],
             "duration": "1_minute"
           }
         },
@@ -307,7 +339,10 @@
             "dc": 15,
             "failure": "staged_condition"
           },
-          "conditions_inflicted": ["Restrained", "Petrified"],
+          "conditions_inflicted": [
+            "Restrained",
+            "Petrified"
+          ],
           "metadata": {
             "first_failure": "Restrained",
             "second_failure": "Petrified",
@@ -336,7 +371,9 @@
               "damage_type": "Force"
             }
           ],
-          "damage_types": ["Force"],
+          "damage_types": [
+            "Force"
+          ],
           "metadata": {
             "zero_hit_point_effect": "disintegrates_into_dust"
           }
@@ -363,7 +400,9 @@
               "damage_type": "Necrotic"
             }
           ],
-          "damage_types": ["Necrotic"],
+          "damage_types": [
+            "Necrotic"
+          ],
           "metadata": {
             "zero_hit_point_effect": "dies"
           }
@@ -422,7 +461,13 @@
     "has_image": true,
     "has_lore": true
   },
-  "damage_types_dealt": ["Force", "Necrotic", "Piercing", "Poison", "Psychic"],
+  "damage_types_dealt": [
+    "Force",
+    "Necrotic",
+    "Piercing",
+    "Poison",
+    "Psychic"
+  ],
   "conditions_inflicted": [
     "Charmed",
     "Frightened",
@@ -432,7 +477,11 @@
     "Restrained",
     "Unconscious"
   ],
-  "tags": ["synthetic", "field-inventory", "non-srd-transform"],
+  "tags": [
+    "synthetic",
+    "field-inventory",
+    "non-srd-transform"
+  ],
   "provenance": {
     "source_id": "synthetic-reloader",
     "source_title": "Synthetic Fixtures",
@@ -445,5 +494,16 @@
   },
   "confidence": 1,
   "source_specific_fields": {},
-  "raw_json": {}
+  "raw_json": {},
+  "lore": {
+    "text": "[synthetic lore text omitted from public fixture]",
+    "text_hash": "sha256:synthetic-reloader-lore-v1",
+    "source_page_start": 1,
+    "source_page_end": 1,
+    "block_ids": [
+      "synthetic-p0001-b-lore"
+    ],
+    "confidence": 1.0,
+    "notes": "Synthetic lore associated with the Reloader fixture."
+  }
 }

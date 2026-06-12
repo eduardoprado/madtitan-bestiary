@@ -94,5 +94,7 @@ def test_page_content_annotation_fixture_validates_image_and_lore_detections() -
     lore = next(detection for detection in annotation.detections if detection.kind == "monster_lore")
     assert image.monster_name_hint == "Adult Red Dragon"
     assert image.bbox is not None
+    assert lore.text_ref == "private://monster-lore/mm2024/adult-red-dragon/p0255/lore-v1.txt"
+    assert lore.text_hash == "sha256:mm2024-adult-red-dragon-lore-private-v1"
     assert lore.text_span_ref is not None
     assert lore.block_ids == ["mm2024-p0255-b-lore"]

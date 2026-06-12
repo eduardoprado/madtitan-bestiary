@@ -4,7 +4,9 @@
   "creature_type": "undead",
   "creature_group": "wizard",
   "alignment": "Neutral Evil",
-  "habitats": ["any"],
+  "habitats": [
+    "any"
+  ],
   "armor_class": {
     "value": 20,
     "source": "non-specified"
@@ -85,11 +87,21 @@
     }
   ],
   "passive_perception": 19,
-  "languages": ["All"],
+  "languages": [
+    "All"
+  ],
   "languages_text": "All",
-  "gear": ["Component Pouch"],
-  "damage_resistances": ["Cold", "Lightning"],
-  "damage_immunities": ["Necrotic", "Poison"],
+  "gear": [
+    "Component Pouch"
+  ],
+  "damage_resistances": [
+    "Cold",
+    "Lightning"
+  ],
+  "damage_immunities": [
+    "Necrotic",
+    "Poison"
+  ],
   "condition_immunities": [
     "Charmed",
     "Exhaustion",
@@ -132,7 +144,10 @@
       "text": "[source text omitted from public fixture]",
       "metadata": {
         "attack_count": 3,
-        "allowed_attacks": ["Eldritch Burst", "Paralyzing Touch"]
+        "allowed_attacks": [
+          "Eldritch Burst",
+          "Paralyzing Touch"
+        ]
       }
     },
     {
@@ -158,7 +173,9 @@
           }
         ]
       },
-      "damage_types": ["Force"]
+      "damage_types": [
+        "Force"
+      ]
     },
     {
       "name": "Paralyzing Touch",
@@ -182,8 +199,12 @@
           }
         ]
       },
-      "damage_types": ["Cold"],
-      "conditions_inflicted": ["Paralyzed"]
+      "damage_types": [
+        "Cold"
+      ],
+      "conditions_inflicted": [
+        "Paralyzed"
+      ]
     },
     {
       "name": "Spellcasting",
@@ -212,7 +233,11 @@
           },
           {
             "frequency": "2_per_day_each",
-            "spells": ["Animate Dead", "Dimension Door", "Plane Shift"]
+            "spells": [
+              "Animate Dead",
+              "Dimension Door",
+              "Plane Shift"
+            ]
           },
           {
             "frequency": "1_per_day_each",
@@ -237,7 +262,10 @@
       "kind": "reaction",
       "text": "[source text omitted from public fixture]",
       "metadata": {
-        "spells": ["Counterspell", "Shield"],
+        "spells": [
+          "Counterspell",
+          "Shield"
+        ],
         "uses_spellcasting_ability": true
       }
     }
@@ -270,7 +298,9 @@
           "damage_type": "Necrotic"
         }
       ],
-      "damage_types": ["Necrotic"],
+      "damage_types": [
+        "Necrotic"
+      ],
       "metadata": {
         "teleport_distance": 60,
         "teleport_unit": "ft",
@@ -300,7 +330,9 @@
           "damage_type": "Necrotic"
         }
       ],
-      "damage_types": ["Necrotic"],
+      "damage_types": [
+        "Necrotic"
+      ],
       "metadata": {
         "area": "20-foot Emanation",
         "excluded_creature_type": "Undead",
@@ -312,7 +344,9 @@
       "kind": "legendary_action",
       "text": "[source text omitted from public fixture]",
       "metadata": {
-        "spells": ["Fear"],
+        "spells": [
+          "Fear"
+        ],
         "uses_spellcasting_ability": true,
         "reuse_limit": "until_start_of_next_turn"
       }
@@ -323,9 +357,18 @@
     "has_image": true,
     "has_lore": true
   },
-  "damage_types_dealt": ["Cold", "Force", "Necrotic"],
-  "conditions_inflicted": ["Paralyzed"],
-  "tags": ["srd-candidate", "field-inventory"],
+  "damage_types_dealt": [
+    "Cold",
+    "Force",
+    "Necrotic"
+  ],
+  "conditions_inflicted": [
+    "Paralyzed"
+  ],
+  "tags": [
+    "srd-candidate",
+    "field-inventory"
+  ],
   "provenance": {
     "source_id": "mm2024-p196-lich",
     "source_title": "Monster Manual 2024",
@@ -338,5 +381,16 @@
   },
   "confidence": 1,
   "source_specific_fields": {},
-  "raw_json": {}
+  "raw_json": {},
+  "lore": {
+    "text_ref": "private://monster-lore/mm2024/lich/p0196/lore-v1.txt",
+    "text_hash": "sha256:mm2024-lich-lore-private-v1",
+    "source_page_start": 196,
+    "source_page_end": 196,
+    "block_ids": [
+      "mm2024-p0196-b-lore"
+    ],
+    "confidence": 0.9,
+    "notes": "Accepted lore associated with this source-specific Lich occurrence."
+  }
 }

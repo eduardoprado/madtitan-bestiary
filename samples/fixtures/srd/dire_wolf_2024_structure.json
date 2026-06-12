@@ -4,7 +4,9 @@
   "creature_type": "beast",
   "creature_group": null,
   "alignment": "Unaligned",
-  "habitats": ["forest"],
+  "habitats": [
+    "forest"
+  ],
   "armor_class": {
     "value": 14,
     "source": "non-specified"
@@ -117,8 +119,12 @@
         ],
         "target_size_limit": "Large or smaller"
       },
-      "damage_types": ["Piercing"],
-      "conditions_inflicted": ["Prone"]
+      "damage_types": [
+        "Piercing"
+      ],
+      "conditions_inflicted": [
+        "Prone"
+      ]
     }
   ],
   "has_bonus_actions": false,
@@ -135,9 +141,16 @@
     "has_image": true,
     "has_lore": false
   },
-  "damage_types_dealt": ["Piercing"],
-  "conditions_inflicted": ["Prone"],
-  "tags": ["srd-candidate", "field-inventory"],
+  "damage_types_dealt": [
+    "Piercing"
+  ],
+  "conditions_inflicted": [
+    "Prone"
+  ],
+  "tags": [
+    "srd-candidate",
+    "field-inventory"
+  ],
   "provenance": {
     "source_id": "mm2024-p352-dire-wolf",
     "source_title": "Monster Manual 2024",
@@ -150,5 +163,6 @@
   },
   "confidence": 1,
   "source_specific_fields": {},
-  "raw_json": {}
+  "raw_json": {},
+  "lore": null
 }

@@ -56,6 +56,25 @@ class ContentFlags(BaseModel):
     has_lore: bool = False
 
 
+class LoreEntry(BaseModel):
+    """Accepted lore associated with this source-specific monster occurrence."""
+
+    text: str | None = None
+    text_ref: str | None = None
+    text_hash: str | None = None
+    source_page_start: int | None = Field(default=None, ge=1)
+    source_page_end: int | None = Field(default=None, ge=1)
+    block_ids: list[str] = Field(default_factory=list)
+    confidence: float | None = Field(default=None, ge=0, le=1)
+    notes: str | None = None
+
+    @model_validator(mode="after")
+    def require_text_or_ref(self) -> "LoreEntry":
+        if self.text is None and self.text_ref is None:
+            raise ValueError("Lore entry requires either text or text_ref")
+        return self
+
+
 class ExtendedAttribute(BaseModel):
     """Optional normalized attribute promoted from a source-specific field."""
 
@@ -248,6 +267,7 @@ class MonsterOccurrence(BaseModel):
     legendary_actions: list[MonsterFeature] = Field(default_factory=list)
     lair_actions: list[MonsterFeature] = Field(default_factory=list)
     content_flags: ContentFlags = Field(default_factory=ContentFlags)
+    lore: LoreEntry | None = None
     damage_types_dealt: list[str] = Field(default_factory=list)
     conditions_inflicted: list[str] = Field(default_factory=list)
     tags: list[str] = Field(default_factory=list)

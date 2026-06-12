@@ -613,6 +613,108 @@
       "title": "LegendaryResistance",
       "type": "object"
     },
+    "LoreEntry": {
+      "description": "Accepted lore associated with this source-specific monster occurrence.",
+      "properties": {
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "text_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text Ref"
+        },
+        "text_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text Hash"
+        },
+        "source_page_start": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Page Start"
+        },
+        "source_page_end": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Page End"
+        },
+        "block_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Block Ids",
+          "type": "array"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "title": "LoreEntry",
+      "type": "object"
+    },
     "MonsterFeature": {
       "properties": {
         "name": {
@@ -1266,6 +1368,17 @@
     },
     "content_flags": {
       "$ref": "#/$defs/ContentFlags"
+    },
+    "lore": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LoreEntry"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "damage_types_dealt": {
       "items": {

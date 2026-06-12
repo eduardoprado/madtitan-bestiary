@@ -24,6 +24,9 @@
     {
       "kind": "monster_lore",
       "monster_name_hint": "Adult Red Dragon",
+      "text": null,
+      "text_ref": "private://monster-lore/mm2024/adult-red-dragon/p0255/lore-v1.txt",
+      "text_hash": "sha256:mm2024-adult-red-dragon-lore-private-v1",
       "text_span_ref": "private://extracted-text/mm2024/p0255/lore-span-v1",
       "block_ids": ["mm2024-p0255-b-lore"],
       "confidence": 0.82,
