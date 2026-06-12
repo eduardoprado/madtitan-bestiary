@@ -62,3 +62,30 @@ uv run madtitan-pipelines source-manifest list
 
 The loader rejects duplicate `source_book_id` values and refuses to overwrite an
 existing manifest during creation.
+
+## Inspect PDF page inventory
+
+After a source manifest exists, inspect the PDF page inventory before extraction:
+
+```sh
+uv run madtitan-pipelines page-inventory inspect data/source_manifests/behir-test-pdf.json
+```
+
+To include one line per page:
+
+```sh
+uv run madtitan-pipelines page-inventory inspect data/source_manifests/behir-test-pdf.json --show-pages
+```
+
+The page inventory step reads the PDF locally and records internal routing metadata:
+
+- page number and PDF page label
+- page dimensions in PDF points
+- rotation
+- text-layer status: `usable`, `low_text`, `empty`, or `unavailable`
+- text character count, without storing the page text itself
+- image count
+- whether the page likely needs OCR, with reason codes
+- recommended extraction methods for the page
+
+If `page_start` and `page_end` are both `null`, the inventory scans the full PDF.

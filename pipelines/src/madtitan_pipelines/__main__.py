@@ -9,6 +9,7 @@ from typing import TextIO, cast
 from madtitan_contracts.extraction import ExtractionMethod
 from pydantic import ValidationError
 
+from madtitan_pipelines.page_inventory import create_pdf_page_inventory
 from madtitan_pipelines.source_manifest import (
     DEFAULT_MANIFEST_DIR,
     DEFAULT_PREFERRED_METHODS,
@@ -78,6 +79,26 @@ def main(argv: list[str] | None = None) -> int:
         help="Manifest file or directory. Defaults to SOURCE_MANIFEST_PATH.",
     )
 
+    page_inventory_parser = subparsers.add_parser(
+        "page-inventory",
+        help="Inspect PDF page inventory before text extraction.",
+    )
+    page_inventory_subparsers = page_inventory_parser.add_subparsers(
+        dest="page_inventory_command",
+        required=True,
+    )
+
+    inspect_parser = page_inventory_subparsers.add_parser(
+        "inspect",
+        help="Read source manifests and summarize page inventory routing.",
+    )
+    inspect_parser.add_argument("manifest_path", type=Path)
+    inspect_parser.add_argument(
+        "--show-pages",
+        action="store_true",
+        help="Print one line per inventoried page.",
+    )
+
     args = parser.parse_args(argv)
 
     if args.command == "source-manifest" and args.source_manifest_command == "create":
@@ -88,6 +109,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "source-manifest" and args.source_manifest_command == "list":
         return list_manifest_path(args.path)
+
+    if args.command == "page-inventory" and args.page_inventory_command == "inspect":
+        return inspect_page_inventory_path(args.manifest_path, show_pages=args.show_pages)
 
     parser.error("Unknown command")
     return 2
@@ -214,6 +238,44 @@ def list_manifest_path(path: Path | None) -> int:
         print(f"  pages: {page_range}")
         print(f"  preferred methods: {methods}")
         print(f"  allow LLM vision: {settings.allow_llm_vision}")
+    return 0
+
+
+def inspect_page_inventory_path(path: Path, *, show_pages: bool) -> int:
+    try:
+        manifests = load_source_manifests(path)
+    except (FileNotFoundError, ValidationError, DuplicateSourceBookIdError) as error:
+        print(f"Failed to load source manifests: {error}", file=sys.stderr)
+        return 1
+
+    total_pages = 0
+    total_ocr_pages = 0
+    for manifest in manifests:
+        try:
+            records = create_pdf_page_inventory(manifest)
+        except (OSError, RuntimeError, ValueError) as error:
+            print(f"Failed to inventory {manifest.source_book_id}: {error}", file=sys.stderr)
+            return 1
+
+        ocr_pages = sum(1 for record in records if record.likely_needs_ocr)
+        total_pages += len(records)
+        total_ocr_pages += ocr_pages
+        print(f"{manifest.source_book_id}: {len(records)} pages, {ocr_pages} likely need OCR")
+        if show_pages:
+            for record in records:
+                print(
+                    "  "
+                    f"p{record.page_number}"
+                    f" label={record.page_label or 'unset'}"
+                    f" size={record.width_points:g}x{record.height_points:g}pt"
+                    f" text={record.text_layer_status}"
+                    f" chars={record.text_char_count}"
+                    f" images={record.image_count}"
+                    f" methods={','.join(record.recommended_methods)}"
+                )
+
+    print()
+    print(f"{len(manifests)} source book(s), {total_pages} page(s), {total_ocr_pages} OCR candidate(s)")
     return 0
 
 
