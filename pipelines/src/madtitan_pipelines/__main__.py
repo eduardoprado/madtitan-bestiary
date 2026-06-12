@@ -12,8 +12,11 @@ from pydantic import ValidationError
 from madtitan_pipelines.source_manifest import (
     DEFAULT_MANIFEST_DIR,
     DEFAULT_PREFERRED_METHODS,
+    DuplicateSourceBookIdError,
     SourceFileNotFoundError,
     create_source_book,
+    list_source_manifest_paths,
+    load_source_manifest,
     load_source_manifests,
     write_source_manifest,
 )
@@ -50,8 +53,11 @@ def main(argv: list[str] | None = None) -> int:
     create_parser.add_argument(
         "--output-dir",
         type=Path,
-        default=DEFAULT_MANIFEST_DIR,
-        help="Directory where the manifest JSON will be written. Defaults to ignored data/source_manifests.",
+        default=None,
+        help=(
+            "Directory where the manifest JSON will be written. Defaults to "
+            "SOURCE_MANIFEST_PATH or ignored data/source_manifests."
+        ),
     )
 
     validate_parser = source_manifest_subparsers.add_parser(
@@ -59,6 +65,18 @@ def main(argv: list[str] | None = None) -> int:
         help="Validate one manifest file or a directory of manifest JSON files.",
     )
     validate_parser.add_argument("path", type=Path)
+
+    list_parser = source_manifest_subparsers.add_parser(
+        "list",
+        help="List registered source manifests.",
+    )
+    list_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=None,
+        help="Manifest file or directory. Defaults to SOURCE_MANIFEST_PATH.",
+    )
 
     args = parser.parse_args(argv)
 
@@ -68,11 +86,17 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "source-manifest" and args.source_manifest_command == "validate":
         return validate_manifest_path(args.path)
 
+    if args.command == "source-manifest" and args.source_manifest_command == "list":
+        return list_manifest_path(args.path)
+
     parser.error("Unknown command")
     return 2
 
 
-def create_manifest_interactive(output_dir: Path) -> int:
+def create_manifest_interactive(output_dir: Path | None) -> int:
+    settings = get_pipeline_settings()
+    manifest_output_dir = output_dir or Path(settings.source_manifest_path or DEFAULT_MANIFEST_DIR)
+
     if not prompt_bool("Would you like to extract a new book?", default=True):
         print("No manifest created.")
         return 0
@@ -105,6 +129,7 @@ def create_manifest_interactive(output_dir: Path) -> int:
             page_end=page_end,
             render_dpi=render_dpi,
             allow_llm_vision=allow_llm_vision,
+            local_pdf_mirror=settings.local_pdf_mirror,
         )
     except SourceFileNotFoundError as error:
         print_manifest_creation_failure(error)
@@ -113,7 +138,12 @@ def create_manifest_interactive(output_dir: Path) -> int:
         print_manifest_creation_failure(error)
         return 1
 
-    output_path = write_source_manifest(source_book, output_dir)
+    try:
+        output_path = write_source_manifest(source_book, manifest_output_dir)
+    except FileExistsError as error:
+        print_manifest_creation_failure(error)
+        return 1
+
     print()
     print(color_text("Source manifest created!", ANSI_GREEN_BOLD, sys.stdout))
     print(f"  Path: {output_path}")
@@ -124,20 +154,66 @@ def create_manifest_interactive(output_dir: Path) -> int:
 
 def validate_manifest_path(path: Path) -> int:
     try:
-        manifests = load_source_manifests(path)
-    except (FileNotFoundError, ValidationError) as error:
+        manifest_paths = list_source_manifest_paths(path)
+    except FileNotFoundError as error:
         print(f"failed {path}")
         print(f"  {error}")
         return 1
 
-    if not manifests:
+    if not manifest_paths:
         print(f"No manifest JSON files found in {path}", file=sys.stderr)
         return 2
 
-    for manifest in manifests:
-        print(f"accepted {manifest.source_book_id} ({manifest.book_title})")
+    accepted_ids: set[str] = set()
+    accepted_count = 0
+    failed_count = 0
+    for manifest_path in manifest_paths:
+        try:
+            manifest = load_source_manifest(manifest_path)
+            if manifest.source_book_id in accepted_ids:
+                raise DuplicateSourceBookIdError(
+                    f"Duplicate source_book_id value: {manifest.source_book_id}"
+                )
+            accepted_ids.add(manifest.source_book_id)
+        except (OSError, ValidationError, DuplicateSourceBookIdError) as error:
+            failed_count += 1
+            print(f"failed {manifest_path}")
+            print(f"  {error}")
+            continue
+
+        accepted_count += 1
+        print(f"accepted {manifest_path} ({manifest.source_book_id}: {manifest.book_title})")
+
     print()
-    print(f"{len(manifests)} accepted, 0 failed")
+    print(f"{accepted_count} accepted, {failed_count} failed")
+    return 0 if failed_count == 0 else 1
+
+
+def list_manifest_path(path: Path | None) -> int:
+    settings = get_pipeline_settings()
+    manifest_path = path or Path(settings.source_manifest_path or DEFAULT_MANIFEST_DIR)
+    try:
+        manifests = load_source_manifests(manifest_path)
+    except (FileNotFoundError, ValidationError, DuplicateSourceBookIdError) as error:
+        print(f"Failed to list source manifests: {error}", file=sys.stderr)
+        return 1
+
+    if not manifests:
+        print(f"No source manifests found in {manifest_path}")
+        return 0
+
+    print("Source manifests")
+    for manifest in manifests:
+        settings = manifest.extraction_settings
+        methods = ", ".join(settings.preferred_methods) or "none"
+        page_range = format_page_range(settings.page_start, settings.page_end)
+        print(f"- {manifest.source_book_id}")
+        print(f"  title: {manifest.book_title}")
+        print(f"  ruleset: {manifest.ruleset}")
+        print(f"  source: {manifest.local_source_ref}")
+        print(f"  pages: {page_range}")
+        print(f"  preferred methods: {methods}")
+        print(f"  allow LLM vision: {settings.allow_llm_vision}")
     return 0
 
 
@@ -217,6 +293,31 @@ def default_slug(value: str) -> str:
     from madtitan_pipelines.source_manifest import slugify
 
     return slugify(value)
+
+
+def format_page_range(page_start: int | None, page_end: int | None) -> str:
+    if page_start is None and page_end is None:
+        return "full PDF"
+    start = str(page_start) if page_start is not None else "first page"
+    end = str(page_end) if page_end is not None else "last page"
+    return f"{start} to {end}"
+
+
+class CliPipelineSettings:
+    def __init__(self) -> None:
+        self.local_pdf_mirror = os.environ.get("LOCAL_PDF_MIRROR")
+        self.source_manifest_path = os.environ.get(
+            "SOURCE_MANIFEST_PATH",
+            str(DEFAULT_MANIFEST_DIR),
+        )
+
+
+def get_pipeline_settings() -> object:
+    try:
+        from madtitan_pipelines.resources.settings import PipelineSettings
+    except ModuleNotFoundError:
+        return CliPipelineSettings()
+    return PipelineSettings()
 
 
 def print_manifest_creation_failure(error: Exception) -> None:

@@ -20,12 +20,12 @@ real extracted source text out of git.
 
 Goal: load user-provided book metadata and extraction settings before touching the PDF.
 
-Missing work:
+Status: v1 complete.
 
-- Decide whether the current local JSON manifest format needs any additional fields
-  once real PDFs are tested.
-- Add any source-specific extraction settings that become necessary after the first
-  real book run.
+Remaining future refinements:
+
+- Add source-specific extraction settings only after real PDFs prove they are needed.
+- Add optional remote/private object references when the storage layer exists.
 
 Plan:
 
@@ -34,12 +34,18 @@ Plan:
   synthetic/redacted fixtures.
 - Use `uv run madtitan-pipelines source-manifest validate data/source_manifests` before
   extraction.
-- Later, connect this to the private local mirror and optional R2 references.
+- Use `uv run madtitan-pipelines source-manifest list` to inspect registered sources.
+- Use `LOCAL_PDF_MIRROR` for relative PDF paths inside the private local bestiary folder.
+- Later, connect this to optional R2 references.
 
 Acceptance:
 
 - A real PDF can be registered without extracting text. Done for local manifests.
 - The loader can validate all source metadata with the contracts package. Done.
+- The loader can list registered manifests. Done.
+- The loader refuses duplicate `source_book_id` values. Done.
+- The loader refuses accidental manifest overwrites. Done.
+- Relative PDF paths can resolve through `LOCAL_PDF_MIRROR`. Done.
 - No raw PDF content is copied into repo-tracked files.
 
 ## 2. PDF Page Inventory

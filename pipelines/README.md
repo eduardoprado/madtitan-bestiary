@@ -26,12 +26,39 @@ uv run madtitan-pipelines source-manifest create
 ```
 
 The command asks for the book title, ruleset, local PDF path, page range settings, and
-whether LLM vision is allowed for that source. It writes a validated `SourceBook`
-manifest to `data/source_manifests/` by default. That directory is ignored by git
-because it can contain private local paths.
+preferred extraction methods. It writes a validated `SourceBook` manifest to
+`SOURCE_MANIFEST_PATH`, or `data/source_manifests/` by default. That directory is
+ignored by git because it can contain private local paths.
+
+If `LOCAL_PDF_MIRROR` is set in `.env`, the manifest creator can accept either:
+
+- an absolute PDF path, such as `/Users/you/Documents/bestiaries/book.pdf`
+- a relative PDF path inside the mirror, such as `book.pdf`
+
+The default preferred methods are:
+
+- `pdf_text_layer`: read embedded/selectable PDF text first.
+- `local_ocr`: render pages locally and run OCR when needed.
+
+Other supported methods are:
+
+- `llm_vision_text`: use an LLM vision pass for hard pages.
+- `manual_transcription`: use human-entered text for fixtures or repairs.
+
+If `llm_vision_text` is included in preferred methods, `allow_llm_vision` is set to
+true automatically. Otherwise, the CLI asks whether LLM vision is allowed as a fallback.
 
 Validate one manifest or the manifest directory:
 
 ```sh
 uv run madtitan-pipelines source-manifest validate data/source_manifests
 ```
+
+List registered manifests:
+
+```sh
+uv run madtitan-pipelines source-manifest list
+```
+
+The loader rejects duplicate `source_book_id` values and refuses to overwrite an
+existing manifest during creation.

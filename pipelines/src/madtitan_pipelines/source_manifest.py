@@ -10,10 +10,15 @@ from madtitan_contracts.extraction import ExtractionMethod, ExtractionSettings, 
 
 DEFAULT_MANIFEST_DIR = Path("data/source_manifests")
 DEFAULT_PREFERRED_METHODS: list[ExtractionMethod] = ["pdf_text_layer", "local_ocr"]
+PathInput = str | Path
 
 
 class SourceFileNotFoundError(FileNotFoundError):
     """Raised when a source manifest points to a missing local PDF file."""
+
+
+class DuplicateSourceBookIdError(ValueError):
+    """Raised when multiple manifests declare the same source book id."""
 
 
 def create_source_book(
@@ -29,12 +34,13 @@ def create_source_book(
     page_end: int | None = None,
     render_dpi: int | None = 220,
     allow_llm_vision: bool = False,
+    local_pdf_mirror: str | Path | None = None,
 ) -> SourceBook:
     """Build a validated SourceBook manifest row from user-provided metadata."""
 
-    source_path = Path(local_source_ref).expanduser()
+    source_path = resolve_source_file_path(local_source_ref, local_pdf_mirror)
     validate_source_file(source_path)
-    resolved_source_ref = str(source_path.resolve()) if source_path.exists() else local_source_ref
+    resolved_source_ref = str(source_path.resolve())
     checksum = source_file_checksum or checksum_file(source_path)
     file_id = source_file_id or source_file_id_from_path(source_path, checksum)
     book_id = source_book_id or slugify(book_title)
@@ -63,23 +69,67 @@ def create_source_book(
     )
 
 
-def write_source_manifest(source_book: SourceBook, output_dir: Path = DEFAULT_MANIFEST_DIR) -> Path:
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / f"{source_book.source_book_id}.json"
+def write_source_manifest(
+    source_book: SourceBook,
+    output_dir: PathInput = DEFAULT_MANIFEST_DIR,
+    *,
+    overwrite: bool = False,
+) -> Path:
+    manifest_dir = coerce_path(output_dir)
+    manifest_dir.mkdir(parents=True, exist_ok=True)
+    output_path = manifest_dir / f"{source_book.source_book_id}.json"
+    if output_path.exists() and not overwrite:
+        raise FileExistsError(
+            f"Source manifest already exists: {output_path}. "
+            "Choose a different source book id or remove the existing manifest."
+        )
     output_path.write_text(json.dumps(source_book.model_dump(mode="json"), indent=2) + "\n")
     return output_path
 
 
-def load_source_manifest(path: Path) -> SourceBook:
-    return SourceBook.model_validate_json(path.read_text())
+def load_source_manifest(path: PathInput) -> SourceBook:
+    manifest_path = coerce_path(path)
+    return SourceBook.model_validate_json(manifest_path.read_text())
 
 
-def load_source_manifests(path: Path) -> list[SourceBook]:
-    if path.is_file():
-        return [load_source_manifest(path)]
-    if path.is_dir():
-        return [load_source_manifest(candidate) for candidate in sorted(path.glob("*.json"))]
-    raise FileNotFoundError(f"Source manifest path does not exist: {path}")
+def load_source_manifests(path: PathInput) -> list[SourceBook]:
+    manifest_paths = list_source_manifest_paths(path)
+    manifests = [load_source_manifest(candidate) for candidate in manifest_paths]
+    ensure_unique_source_book_ids(manifests)
+    return manifests
+
+
+def list_source_manifest_paths(path: PathInput) -> list[Path]:
+    manifest_path = coerce_path(path)
+    if manifest_path.is_file():
+        return [manifest_path]
+    if manifest_path.is_dir():
+        return sorted(manifest_path.glob("*.json"))
+    raise FileNotFoundError(f"Source manifest path does not exist: {manifest_path}")
+
+
+def ensure_unique_source_book_ids(manifests: list[SourceBook]) -> None:
+    seen_ids: dict[str, int] = {}
+    duplicate_ids: list[str] = []
+    for manifest in manifests:
+        seen_ids[manifest.source_book_id] = seen_ids.get(manifest.source_book_id, 0) + 1
+        if seen_ids[manifest.source_book_id] == 2:
+            duplicate_ids.append(manifest.source_book_id)
+
+    if duplicate_ids:
+        raise DuplicateSourceBookIdError(
+            "Duplicate source_book_id value(s): " + ", ".join(sorted(duplicate_ids))
+        )
+
+
+def resolve_source_file_path(
+    local_source_ref: str,
+    local_pdf_mirror: str | Path | None = None,
+) -> Path:
+    source_path = Path(local_source_ref).expanduser()
+    if source_path.is_absolute() or local_pdf_mirror is None:
+        return source_path
+    return coerce_path(local_pdf_mirror) / source_path
 
 
 def validate_source_file(path: Path) -> None:
@@ -114,3 +164,7 @@ def slugify(value: str) -> str:
     slug = re.sub(r"[^a-z0-9]+", "-", value.strip().lower())
     slug = re.sub(r"-+", "-", slug).strip("-")
     return slug or "source-book"
+
+
+def coerce_path(path: PathInput) -> Path:
+    return Path(path).expanduser()
