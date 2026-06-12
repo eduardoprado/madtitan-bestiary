@@ -22,24 +22,24 @@ Goal: load user-provided book metadata and extraction settings before touching t
 
 Missing work:
 
-- Define the local manifest file format for source books.
-- Load `source_book_id`, `book_title`, `ruleset`, file path/ref, checksum, and
-  extraction settings into `SourceBook`.
-- Compute/check source file checksum.
-- Validate that required user-provided metadata exists before extraction starts.
-- Keep `book_title` and `ruleset` manifest-driven, not OCR/LLM-inferred.
+- Decide whether the current local JSON manifest format needs any additional fields
+  once real PDFs are tested.
+- Add any source-specific extraction settings that become necessary after the first
+  real book run.
 
 Plan:
 
-- Start with a local JSON manifest fixture.
-- Add a loader that emits validated `SourceBook` records.
-- Fail fast when the PDF path/ref is missing or the checksum does not match.
+- Use `uv run madtitan-pipelines source-manifest create` before each new extraction.
+- Keep the generated manifests in ignored `data/source_manifests/` unless they are
+  synthetic/redacted fixtures.
+- Use `uv run madtitan-pipelines source-manifest validate data/source_manifests` before
+  extraction.
 - Later, connect this to the private local mirror and optional R2 references.
 
 Acceptance:
 
-- A real PDF can be registered without extracting text.
-- The loader can validate all source metadata with the contracts package.
+- A real PDF can be registered without extracting text. Done for local manifests.
+- The loader can validate all source metadata with the contracts package. Done.
 - No raw PDF content is copied into repo-tracked files.
 
 ## 2. PDF Page Inventory

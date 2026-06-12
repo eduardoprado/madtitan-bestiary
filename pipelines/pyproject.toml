@@ -6,6 +6,7 @@ requires-python = ">=3.11"
 dependencies = [
   "dagster",
   "dagster-postgres",
+  "madtitan-contracts",
   "pdfplumber",
   "pymupdf",
   "pydantic>=2",
@@ -16,6 +17,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
+
+[project.scripts]
+madtitan-pipelines = "madtitan_pipelines.__main__:main"
+
+[tool.uv.sources]
+madtitan-contracts = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

@@ -16,3 +16,22 @@ The v1 pipeline keeps copyrighted source material local:
 
 The current files are scaffolding. Each asset returns metadata or synthetic placeholders
 until extraction rules and the first field inventory are complete.
+
+## Create a source manifest
+
+Before extracting a new PDF, create a private source manifest:
+
+```sh
+uv run madtitan-pipelines source-manifest create
+```
+
+The command asks for the book title, ruleset, local PDF path, page range settings, and
+whether LLM vision is allowed for that source. It writes a validated `SourceBook`
+manifest to `data/source_manifests/` by default. That directory is ignored by git
+because it can contain private local paths.
+
+Validate one manifest or the manifest directory:
+
+```sh
+uv run madtitan-pipelines source-manifest validate data/source_manifests
+```
