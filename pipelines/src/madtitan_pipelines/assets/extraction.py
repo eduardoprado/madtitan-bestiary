@@ -2,22 +2,22 @@ from dagster import asset
 
 
 @asset
-def page_text(pdf_pages: list[dict[str, str]]) -> list[dict[str, str]]:
+def page_text(pdf_pages: list[dict[str, object]]) -> list[dict[str, object]]:
     """Layout-aware text extracted from pages with a usable text layer."""
     return []
 
 
 @asset
-def page_ocr_text(pdf_pages: list[dict[str, str]]) -> list[dict[str, str]]:
+def page_ocr_text(pdf_pages: list[dict[str, object]]) -> list[dict[str, object]]:
     """Local OCR output for scanned or low-text pages."""
     return []
 
 
 @asset
 def monster_candidates(
-    page_text: list[dict[str, str]],
-    page_ocr_text: list[dict[str, str]],
-) -> list[dict[str, str]]:
+    page_text: list[dict[str, object]],
+    page_ocr_text: list[dict[str, object]],
+) -> list[dict[str, object]]:
     """Segmented candidate stat blocks with source page spans."""
     return []
 

@@ -52,12 +52,13 @@ Acceptance:
 
 Goal: scan each source PDF and create a page inventory before extraction attempts.
 
-Missing work:
+Status: v1 implementation complete.
 
-- Read page count, page labels, dimensions, and basic text-layer availability.
-- Detect pages that likely need OCR.
-- Store enough metadata to decide which extraction methods to run per page.
-- Preserve page identity for later `ExtractedPageText` records.
+Remaining future refinements:
+
+- Tune OCR routing thresholds after testing real bestiary PDFs.
+- Persist page inventory records once raw storage is available.
+- Add richer scanned-page/image heuristics if text-layer triage is not enough.
 
 Plan:
 
@@ -65,12 +66,16 @@ Plan:
 - Emit page inventory records internally first; formalize a contract only if needed.
 - Include page dimensions because annotation and image crop bboxes depend on them.
 - Treat the whole book as input, but keep page-level outputs.
+- Use `uv run madtitan-pipelines page-inventory inspect <manifest-path>` to sanity-check
+  page routing before extraction.
 
 Acceptance:
 
 - A 200-300 page book can be inventoried quickly.
-- Each page has stable page number/label/dimension metadata.
-- Pages with no usable text layer can be routed to OCR.
+- Each page has stable page number/label/dimension metadata. Done.
+- Pages with no usable text layer can be routed to OCR. Done.
+- `page_start = null` and `page_end = null` scan the full PDF. Done.
+- Inventory does not store raw page text. Done.
 
 ## 3. Text Extraction Attempts
 
