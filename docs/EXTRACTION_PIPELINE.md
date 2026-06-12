@@ -18,12 +18,17 @@ PDF
 
 ### 1. Text Extraction
 
-Input: a source PDF page or page span.
+Input: a source PDF/book from a user-provided `SourceBook` manifest.
 
-Output: `ExtractedPageText`.
+Output: one or more page-level `ExtractedPageText` attempt records.
 
 This step turns page content into readable text. It does not try to understand the stat
-block yet.
+block yet. A full 200-300 page bestiary can be processed in one extraction job, but the
+persisted output is page-level so individual pages can be retried, inspected, or linked
+to candidates.
+
+Book title, ruleset, file identity, and extraction settings come from `SourceBook`.
+They are not inferred from OCR or LLM output in v1.
 
 Supported extraction methods:
 
@@ -37,6 +42,14 @@ The output should preserve source page identity, extraction method, confidence, 
 quality notes. Raw extracted text remains private data and must not be committed unless
 it is synthetic or clearly licensed.
 
+Each extraction method attempt is stored separately. For example, page 352 can have a
+`pdf_text_layer` attempt and a `local_ocr` retry attempt. Candidate Segmentation chooses
+which extracted page text IDs to use.
+
+LLM or vision-assisted image/lore observations are stored as `PageContentAnnotation`
+records. These annotations are page-level hints; they do not write directly to
+`MonsterOccurrence.content_flags`.
+
 ### 2. Candidate Segmentation
 
 Input: `ExtractedPageText`.
@@ -48,6 +61,10 @@ This step asks: "Where are the monster stat blocks in this text?"
 It identifies likely monster boundaries, page spans, name hints, section text, and
 candidate-level confidence. A candidate can still be messy, incomplete, or wrong. It is
 not trusted structured data.
+
+This is the first monster-aware filtering step. Pages without monster stat blocks
+produce no candidates. Multi-page stat blocks produce one `MonsterCandidate` with
+multiple `lineage.extracted_page_text_ids`.
 
 The extraction workflow is intentionally source-by-source. A single bestiary PDF will
 usually follow one consistent stat-block pattern, while different PDFs may use
@@ -199,9 +216,39 @@ Segmentation or Candidate Normalization, depending on what changed.
 
 ## Pipeline Objects
 
+### SourceBook
+
+`SourceBook` is the user-provided manifest row for one private PDF/book. It supplies
+book-level facts that extraction attempts inherit.
+
+Recommended fields:
+
+```json
+{
+  "source_book_id": "monster-manual-2024",
+  "book_title": "Monster Manual 2024",
+  "ruleset": "DND 5.5e",
+  "source_file_id": "mm2024-filehash",
+  "source_file_checksum": "sha256:...",
+  "local_source_ref": "private://local-pdf-mirror/monster-manual-2024.pdf",
+  "private_source": true,
+  "extraction_settings": {
+    "preferred_methods": ["pdf_text_layer", "local_ocr", "llm_vision_text"],
+    "page_start": 1,
+    "page_end": 384,
+    "render_dpi": 220,
+    "allow_llm_vision": true,
+    "metadata": {}
+  },
+  "metadata": {}
+}
+```
+
 ### ExtractedPageText
 
-`ExtractedPageText` represents private text extracted from one source page.
+`ExtractedPageText` represents one private text extraction attempt for one source page.
+Use `text_ref` for real extracted text by default. Inline `text` is only for synthetic,
+redacted, or clearly licensed fixtures.
 
 Recommended fields:
 
@@ -219,6 +266,7 @@ Recommended fields:
   },
   "extraction": {
     "method": "pdf_text_layer",
+    "status": "succeeded",
     "tool_name": "pymupdf",
     "tool_version": "x.y.z",
     "run_id": "extract-run-2026-06-11T05:00:00Z",
@@ -226,15 +274,90 @@ Recommended fields:
     "quality": "good",
     "warnings": []
   },
-  "text": "private extracted page text",
+  "text": null,
+  "text_ref": "private://extracted-text/mm2024/p0255/pdf-text-v1.txt",
+  "text_hash": "sha256:...",
   "layout": {
-    "blocks": [],
     "has_text_layer": true,
-    "is_scanned": false
+    "is_scanned": false,
+    "page_width": 612,
+    "page_height": 792,
+    "page_unit": "pt",
+    "blocks": [
+      {
+        "block_id": "mm2024-p0255-b001",
+        "text": null,
+        "text_ref": "private://extracted-text/mm2024/p0255/blocks/b001.txt",
+        "bbox": {
+          "page": 255,
+          "x0": 0.05,
+          "y0": 0.04,
+          "x1": 0.95,
+          "y1": 0.25,
+          "unit": "page_ratio"
+        },
+        "confidence": 0.92,
+        "reading_order": 0
+      }
+    ]
   },
   "created_at": "2026-06-11T05:00:00Z"
 }
 ```
+
+Validation rules:
+
+- `succeeded` and `partial` extraction attempts require either `text` or `text_ref`.
+- `failed` extraction attempts can omit text but must include at least one warning.
+- Page blocks require either inline block `text` or `text_ref`.
+
+### PageContentAnnotation
+
+`PageContentAnnotation` stores page-level monster image and lore ownership hints from
+approved vision-assisted review or manual annotation.
+
+Recommended fields:
+
+```json
+{
+  "annotation_id": "mm2024-p0255-vision-annotation-v1",
+  "extracted_page_text_id": "mm2024-p0255-pdf-text-v1",
+  "source_book_id": "monster-manual-2024",
+  "page_number": 255,
+  "method": "llm_vision_annotation",
+  "run_id": "vision-run-2026-06-11",
+  "confidence": 0.86,
+  "detections": [
+    {
+      "kind": "monster_image",
+      "monster_name_hint": "Adult Red Dragon",
+      "bbox": {
+        "page": 255,
+        "x0": 0.62,
+        "y0": 0.02,
+        "x1": 0.98,
+        "y1": 0.24,
+        "unit": "page_ratio"
+      },
+      "confidence": 0.88,
+      "notes": "Likely creature illustration associated with the page heading."
+    },
+    {
+      "kind": "monster_lore",
+      "monster_name_hint": "Adult Red Dragon",
+      "text_span_ref": "private://extracted-text/mm2024/p0255/lore-span-v1",
+      "block_ids": ["mm2024-p0255-b-lore"],
+      "confidence": 0.82,
+      "notes": "Lore-style prose associated with the same creature."
+    }
+  ],
+  "created_at": "2026-06-11T05:02:00Z",
+  "metadata": {}
+}
+```
+
+These detections are hints. Candidate Segmentation and Candidate Normalization decide
+whether they map to a final accepted monster occurrence.
 
 ### MonsterCandidate
 
@@ -468,7 +591,9 @@ Processes:
 
 Objects:
 
+- `SourceBook`
 - `ExtractedPageText`
+- `PageContentAnnotation`
 - `MonsterCandidate`
 - `MonsterOccurrenceDraft`
 - `MonsterOccurrence`

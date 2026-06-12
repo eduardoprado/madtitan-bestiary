@@ -1,0 +1,395 @@
+{
+  "$defs": {
+    "ExtractedPageSource": {
+      "description": "Source book and page identity inherited from the source manifest.",
+      "properties": {
+        "source_book_id": {
+          "title": "Source Book Id",
+          "type": "string"
+        },
+        "book_title": {
+          "title": "Book Title",
+          "type": "string"
+        },
+        "ruleset": {
+          "title": "Ruleset",
+          "type": "string"
+        },
+        "source_file_id": {
+          "title": "Source File Id",
+          "type": "string"
+        },
+        "source_file_checksum": {
+          "title": "Source File Checksum",
+          "type": "string"
+        },
+        "page_number": {
+          "minimum": 1,
+          "title": "Page Number",
+          "type": "integer"
+        },
+        "page_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page Label"
+        }
+      },
+      "required": [
+        "source_book_id",
+        "book_title",
+        "ruleset",
+        "source_file_id",
+        "source_file_checksum",
+        "page_number"
+      ],
+      "title": "ExtractedPageSource",
+      "type": "object"
+    },
+    "ExtractionWarning": {
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "default": "warning",
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "ExtractionWarning",
+      "type": "object"
+    },
+    "PageBoundingBox": {
+      "properties": {
+        "page": {
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        },
+        "x0": {
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "title": "Y1",
+          "type": "number"
+        },
+        "unit": {
+          "default": "page_ratio",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "page",
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "PageBoundingBox",
+      "type": "object"
+    },
+    "PageLayout": {
+      "properties": {
+        "has_text_layer": {
+          "title": "Has Text Layer",
+          "type": "boolean"
+        },
+        "is_scanned": {
+          "title": "Is Scanned",
+          "type": "boolean"
+        },
+        "page_width": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page Width"
+        },
+        "page_height": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page Height"
+        },
+        "page_unit": {
+          "default": "pt",
+          "title": "Page Unit",
+          "type": "string"
+        },
+        "blocks": {
+          "items": {
+            "$ref": "#/$defs/PageTextBlock"
+          },
+          "title": "Blocks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "has_text_layer",
+        "is_scanned"
+      ],
+      "title": "PageLayout",
+      "type": "object"
+    },
+    "PageTextBlock": {
+      "properties": {
+        "block_id": {
+          "title": "Block Id",
+          "type": "string"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "text_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text Ref"
+        },
+        "bbox": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PageBoundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "reading_order": {
+          "minimum": 0,
+          "title": "Reading Order",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "block_id",
+        "reading_order"
+      ],
+      "title": "PageTextBlock",
+      "type": "object"
+    },
+    "TextExtractionMetadata": {
+      "properties": {
+        "method": {
+          "enum": [
+            "pdf_text_layer",
+            "local_ocr",
+            "llm_vision_text",
+            "manual_transcription"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "succeeded",
+            "partial",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "tool_name": {
+          "title": "Tool Name",
+          "type": "string"
+        },
+        "tool_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Version"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "quality": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quality"
+        },
+        "warnings": {
+          "items": {
+            "$ref": "#/$defs/ExtractionWarning"
+          },
+          "title": "Warnings",
+          "type": "array"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "type": "object"
+        }
+      },
+      "required": [
+        "method",
+        "status",
+        "tool_name",
+        "run_id"
+      ],
+      "title": "TextExtractionMetadata",
+      "type": "object"
+    }
+  },
+  "description": "One page-level text extraction attempt from a source PDF/book.",
+  "properties": {
+    "extracted_page_text_id": {
+      "title": "Extracted Page Text Id",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/ExtractedPageSource"
+    },
+    "extraction": {
+      "$ref": "#/$defs/TextExtractionMetadata"
+    },
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text"
+    },
+    "text_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text Ref"
+    },
+    "text_hash": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text Hash"
+    },
+    "layout": {
+      "$ref": "#/$defs/PageLayout"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "extracted_page_text_id",
+    "source",
+    "extraction",
+    "layout",
+    "created_at"
+  ],
+  "title": "ExtractedPageText",
+  "type": "object"
+}

@@ -1,0 +1,51 @@
+{
+  "extracted_page_text_id": "synthetic-p0001-manual-text-v1",
+  "source": {
+    "source_book_id": "synthetic-fixtures",
+    "book_title": "Synthetic Fixtures",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "synthetic-reloader-fixture",
+    "source_file_checksum": "sha256:synthetic-reloader-fixture",
+    "page_number": 1,
+    "page_label": "1"
+  },
+  "extraction": {
+    "method": "manual_transcription",
+    "status": "succeeded",
+    "tool_name": "manual_fixture",
+    "tool_version": "v1",
+    "run_id": "manual-fixture-2026-06-11",
+    "confidence": 1,
+    "quality": "synthetic",
+    "warnings": [],
+    "metadata": {
+      "source": "synthetic fixture"
+    }
+  },
+  "text": "RELOADER\n[synthetic fixture text: redacted statblock-style content]",
+  "text_hash": "sha256:synthetic-reloader-manual-text",
+  "layout": {
+    "has_text_layer": true,
+    "is_scanned": false,
+    "page_width": 612,
+    "page_height": 792,
+    "page_unit": "pt",
+    "blocks": [
+      {
+        "block_id": "synthetic-p0001-b001",
+        "text": "RELOADER [synthetic fixture header]",
+        "bbox": {
+          "page": 1,
+          "x0": 0.04,
+          "y0": 0.04,
+          "x1": 0.96,
+          "y1": 0.18,
+          "unit": "page_ratio"
+        },
+        "confidence": 1,
+        "reading_order": 0
+      }
+    ]
+  },
+  "created_at": "2026-06-11T06:24:00Z"
+}

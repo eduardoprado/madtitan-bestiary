@@ -1,0 +1,51 @@
+{
+  "extracted_page_text_id": "mm2024-p0012-pdf-text-v1",
+  "source": {
+    "source_book_id": "monster-manual-2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "monster-manual-2024-fixture",
+    "source_file_checksum": "sha256:monster-manual-2024-fixture",
+    "page_number": 12,
+    "page_label": "12"
+  },
+  "extraction": {
+    "method": "pdf_text_layer",
+    "status": "succeeded",
+    "tool_name": "pymupdf",
+    "tool_version": "fixture",
+    "run_id": "extract-fixture-2026-06-11",
+    "confidence": 0.9,
+    "quality": "good_non_monster_page",
+    "warnings": [],
+    "metadata": {
+      "candidate_expected": false
+    }
+  },
+  "text_ref": "private://extracted-text/mm2024/p0012/pdf-text-v1.txt",
+  "text_hash": "sha256:mm2024-p0012-private-text",
+  "layout": {
+    "has_text_layer": true,
+    "is_scanned": false,
+    "page_width": 612,
+    "page_height": 792,
+    "page_unit": "pt",
+    "blocks": [
+      {
+        "block_id": "mm2024-p0012-b001",
+        "text": "[redacted block: introductory or reference material, not a monster statblock]",
+        "bbox": {
+          "page": 12,
+          "x0": 0.08,
+          "y0": 0.08,
+          "x1": 0.92,
+          "y1": 0.88,
+          "unit": "page_ratio"
+        },
+        "confidence": 0.9,
+        "reading_order": 0
+      }
+    ]
+  },
+  "created_at": "2026-06-11T06:20:00Z"
+}

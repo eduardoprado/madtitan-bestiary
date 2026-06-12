@@ -1,0 +1,38 @@
+{
+  "annotation_id": "mm2024-p0255-vision-annotation-v1",
+  "extracted_page_text_id": "mm2024-p0255-pdf-text-v1",
+  "source_book_id": "monster-manual-2024",
+  "page_number": 255,
+  "method": "llm_vision_annotation",
+  "run_id": "vision-annotation-fixture-2026-06-11",
+  "confidence": 0.86,
+  "detections": [
+    {
+      "kind": "monster_image",
+      "monster_name_hint": "Adult Red Dragon",
+      "bbox": {
+        "page": 255,
+        "x0": 0.62,
+        "y0": 0.02,
+        "x1": 0.98,
+        "y1": 0.24,
+        "unit": "page_ratio"
+      },
+      "confidence": 0.88,
+      "notes": "Vision fixture marks a likely monster illustration associated with the page heading."
+    },
+    {
+      "kind": "monster_lore",
+      "monster_name_hint": "Adult Red Dragon",
+      "text_span_ref": "private://extracted-text/mm2024/p0255/lore-span-v1",
+      "block_ids": ["mm2024-p0255-b-lore"],
+      "confidence": 0.82,
+      "notes": "Vision fixture marks lore-style prose associated with the same creature."
+    }
+  ],
+  "created_at": "2026-06-11T06:25:00Z",
+  "metadata": {
+    "model": "fixture-vision-model",
+    "prompt_version": "page-annotation-v1"
+  }
+}

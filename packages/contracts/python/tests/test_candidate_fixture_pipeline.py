@@ -59,3 +59,17 @@ def test_dire_wolf_candidate_fixture_exercises_inference() -> None:
     assert monster.initiative is not None
     assert monster.initiative.bonus == 2
     assert monster.initiative.static_value == 12
+
+
+def test_multi_page_candidate_fixture_references_two_extracted_pages() -> None:
+    path = Path(__file__).parents[4] / "samples/candidates/synthetic/multi_page_candidate.json"
+    candidate = MonsterCandidate.model_validate_json(path.read_text())
+
+    assert candidate.source.page_start == 10
+    assert candidate.source.page_end == 11
+    assert candidate.lineage.extracted_page_text_ids == [
+        "synthetic-p0010-manual-text-v1",
+        "synthetic-p0011-manual-text-v1",
+    ]
+    assert len(candidate.location.bounding_boxes) == 2
+    assert {box.page for box in candidate.location.bounding_boxes} == {10, 11}

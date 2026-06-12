@@ -1,0 +1,57 @@
+{
+  "extracted_page_text_id": "mm2024-p0352-local-ocr-v1",
+  "source": {
+    "source_book_id": "monster-manual-2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "monster-manual-2024-fixture",
+    "source_file_checksum": "sha256:monster-manual-2024-fixture",
+    "page_number": 352,
+    "page_label": "352"
+  },
+  "extraction": {
+    "method": "local_ocr",
+    "status": "partial",
+    "tool_name": "tesseract",
+    "tool_version": "fixture",
+    "run_id": "extract-fixture-ocr-2026-06-11",
+    "confidence": 0.62,
+    "quality": "partial_wrapped_text",
+    "warnings": [
+      {
+        "code": "low_confidence_lines",
+        "message": "Several short statblock lines were low confidence.",
+        "severity": "warning"
+      }
+    ],
+    "metadata": {
+      "render_dpi": 220
+    }
+  },
+  "text": "[redacted fixture text: partial OCR output]",
+  "text_hash": "sha256:mm2024-p0352-ocr-redacted-text",
+  "layout": {
+    "has_text_layer": false,
+    "is_scanned": true,
+    "page_width": 612,
+    "page_height": 792,
+    "page_unit": "pt",
+    "blocks": [
+      {
+        "block_id": "mm2024-p0352-ocr-b001",
+        "text": "[redacted OCR block with possible line wrapping]",
+        "bbox": {
+          "page": 352,
+          "x0": 0.04,
+          "y0": 0.04,
+          "x1": 0.96,
+          "y1": 0.96,
+          "unit": "page_ratio"
+        },
+        "confidence": 0.62,
+        "reading_order": 0
+      }
+    ]
+  },
+  "created_at": "2026-06-11T06:22:00Z"
+}

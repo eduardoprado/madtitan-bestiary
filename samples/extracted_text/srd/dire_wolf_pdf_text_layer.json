@@ -1,0 +1,68 @@
+{
+  "extracted_page_text_id": "mm2024-p0352-pdf-text-v1",
+  "source": {
+    "source_book_id": "monster-manual-2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "monster-manual-2024-fixture",
+    "source_file_checksum": "sha256:monster-manual-2024-fixture",
+    "page_number": 352,
+    "page_label": "352"
+  },
+  "extraction": {
+    "method": "pdf_text_layer",
+    "status": "succeeded",
+    "tool_name": "pymupdf",
+    "tool_version": "fixture",
+    "run_id": "extract-fixture-2026-06-11",
+    "confidence": 0.94,
+    "quality": "good",
+    "warnings": [],
+    "metadata": {
+      "text_layer": "present"
+    }
+  },
+  "text": "[redacted fixture text: one monster statblock page detected]",
+  "text_ref": null,
+  "text_hash": "sha256:mm2024-p0352-redacted-text",
+  "layout": {
+    "has_text_layer": true,
+    "is_scanned": false,
+    "page_width": 612,
+    "page_height": 792,
+    "page_unit": "pt",
+    "blocks": [
+      {
+        "block_id": "mm2024-p0352-b001",
+        "text": "[redacted block: statblock header]",
+        "text_ref": null,
+        "bbox": {
+          "page": 352,
+          "x0": 0.04,
+          "y0": 0.04,
+          "x1": 0.96,
+          "y1": 0.18,
+          "unit": "page_ratio"
+        },
+        "confidence": 0.96,
+        "reading_order": 0
+      },
+      {
+        "block_id": "mm2024-p0352-b002",
+        "text": "[redacted block: traits and actions]",
+        "text_ref": null,
+        "bbox": {
+          "page": 352,
+          "x0": 0.04,
+          "y0": 0.18,
+          "x1": 0.96,
+          "y1": 0.96,
+          "unit": "page_ratio"
+        },
+        "confidence": 0.93,
+        "reading_order": 1
+      }
+    ]
+  },
+  "created_at": "2026-06-11T06:20:00Z"
+}

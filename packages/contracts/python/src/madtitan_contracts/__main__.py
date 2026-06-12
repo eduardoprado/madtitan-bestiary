@@ -10,6 +10,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from madtitan_contracts.candidate import MonsterCandidate
+from madtitan_contracts.extraction import ExtractedPageText, PageContentAnnotation, SourceBook
 from madtitan_contracts.monster import MonsterOccurrence
 
 
@@ -25,7 +26,7 @@ def main(argv: list[str] | None = None) -> int:
 
     validate_parser = subparsers.add_parser(
         "validate",
-        help="Validate monster occurrence and candidate JSON fixture files.",
+        help="Validate source, extraction, candidate, and occurrence JSON fixture files.",
     )
     validate_parser.add_argument(
         "paths",
@@ -121,10 +122,22 @@ def validate_record(label: str, record: Any, summary: ValidationSummary) -> None
 
 
 def validate_contract_record(record: dict[str, Any]) -> tuple[str, str]:
+    if "annotation_id" in record:
+        annotation = PageContentAnnotation.model_validate(record)
+        return "PageContentAnnotation", annotation.annotation_id
+
+    if "extracted_page_text_id" in record:
+        extracted_text = ExtractedPageText.model_validate(record)
+        return "ExtractedPageText", extracted_text.extracted_page_text_id
+
     if "candidate_id" in record:
         candidate = MonsterCandidate.model_validate(record)
         display_name = candidate.candidate.name_hint or candidate.candidate_id
         return "MonsterCandidate", display_name
+
+    if "source_book_id" in record and "extraction_settings" in record:
+        source_book = SourceBook.model_validate(record)
+        return "SourceBook", source_book.book_title
 
     monster = MonsterOccurrence.model_validate(record)
     return "MonsterOccurrence", monster.name

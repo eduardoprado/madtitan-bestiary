@@ -1,0 +1,22 @@
+{
+  "source_book_id": "monster-manual-2024",
+  "book_title": "Monster Manual 2024",
+  "ruleset": "DND 5.5e",
+  "source_file_id": "monster-manual-2024-fixture",
+  "source_file_checksum": "sha256:monster-manual-2024-fixture",
+  "local_source_ref": "private://local-pdf-mirror/monster-manual-2024.pdf",
+  "private_source": true,
+  "extraction_settings": {
+    "preferred_methods": ["pdf_text_layer", "local_ocr", "llm_vision_text"],
+    "page_start": 1,
+    "page_end": 384,
+    "render_dpi": 220,
+    "allow_llm_vision": true,
+    "metadata": {
+      "notes": "Fixture manifest; title and ruleset are user-provided, not inferred."
+    }
+  },
+  "metadata": {
+    "fixture_kind": "source_manifest"
+  }
+}

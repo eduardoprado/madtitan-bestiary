@@ -1,0 +1,191 @@
+{
+  "$defs": {
+    "PageBoundingBox": {
+      "properties": {
+        "page": {
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        },
+        "x0": {
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "title": "Y1",
+          "type": "number"
+        },
+        "unit": {
+          "default": "page_ratio",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "page",
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "PageBoundingBox",
+      "type": "object"
+    },
+    "PageContentDetection": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "monster_image",
+            "monster_lore"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "monster_name_hint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Monster Name Hint"
+        },
+        "bbox": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PageBoundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "text_span_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text Span Ref"
+        },
+        "block_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Block Ids",
+          "type": "array"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "confidence"
+      ],
+      "title": "PageContentDetection",
+      "type": "object"
+    }
+  },
+  "description": "Page-level monster image/lore ownership hints from vision or review.",
+  "properties": {
+    "annotation_id": {
+      "title": "Annotation Id",
+      "type": "string"
+    },
+    "extracted_page_text_id": {
+      "title": "Extracted Page Text Id",
+      "type": "string"
+    },
+    "source_book_id": {
+      "title": "Source Book Id",
+      "type": "string"
+    },
+    "page_number": {
+      "minimum": 1,
+      "title": "Page Number",
+      "type": "integer"
+    },
+    "method": {
+      "enum": [
+        "llm_vision_annotation",
+        "manual_review",
+        "heuristic_layout"
+      ],
+      "title": "Method",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "detections": {
+      "items": {
+        "$ref": "#/$defs/PageContentDetection"
+      },
+      "title": "Detections",
+      "type": "array"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "metadata": {
+      "title": "Metadata",
+      "type": "object"
+    }
+  },
+  "required": [
+    "annotation_id",
+    "extracted_page_text_id",
+    "source_book_id",
+    "page_number",
+    "method",
+    "run_id",
+    "confidence",
+    "created_at"
+  ],
+  "title": "PageContentAnnotation",
+  "type": "object"
+}

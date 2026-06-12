@@ -1,0 +1,40 @@
+{
+  "extracted_page_text_id": "mm2024-p0099-local-ocr-failed-v1",
+  "source": {
+    "source_book_id": "monster-manual-2024",
+    "book_title": "Monster Manual 2024",
+    "ruleset": "DND 5.5e",
+    "source_file_id": "monster-manual-2024-fixture",
+    "source_file_checksum": "sha256:monster-manual-2024-fixture",
+    "page_number": 99,
+    "page_label": "99"
+  },
+  "extraction": {
+    "method": "local_ocr",
+    "status": "failed",
+    "tool_name": "tesseract",
+    "tool_version": "fixture",
+    "run_id": "extract-fixture-ocr-2026-06-11",
+    "confidence": 0,
+    "quality": "failed",
+    "warnings": [
+      {
+        "code": "no_readable_text",
+        "message": "OCR produced no readable text for this fixture page.",
+        "severity": "error"
+      }
+    ],
+    "metadata": {
+      "render_dpi": 220
+    }
+  },
+  "layout": {
+    "has_text_layer": false,
+    "is_scanned": true,
+    "page_width": 612,
+    "page_height": 792,
+    "page_unit": "pt",
+    "blocks": []
+  },
+  "created_at": "2026-06-11T06:23:00Z"
+}

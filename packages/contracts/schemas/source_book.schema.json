@@ -1,0 +1,128 @@
+{
+  "$defs": {
+    "ExtractionSettings": {
+      "description": "Book-level extraction preferences supplied by the user or manifest.",
+      "properties": {
+        "preferred_methods": {
+          "items": {
+            "enum": [
+              "pdf_text_layer",
+              "local_ocr",
+              "llm_vision_text",
+              "manual_transcription"
+            ],
+            "type": "string"
+          },
+          "title": "Preferred Methods",
+          "type": "array"
+        },
+        "page_start": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page Start"
+        },
+        "page_end": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page End"
+        },
+        "render_dpi": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render Dpi"
+        },
+        "allow_llm_vision": {
+          "default": false,
+          "title": "Allow Llm Vision",
+          "type": "boolean"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "type": "object"
+        }
+      },
+      "title": "ExtractionSettings",
+      "type": "object"
+    }
+  },
+  "description": "User-provided manifest row for a private source PDF/book.",
+  "properties": {
+    "source_book_id": {
+      "title": "Source Book Id",
+      "type": "string"
+    },
+    "book_title": {
+      "title": "Book Title",
+      "type": "string"
+    },
+    "ruleset": {
+      "title": "Ruleset",
+      "type": "string"
+    },
+    "source_file_id": {
+      "title": "Source File Id",
+      "type": "string"
+    },
+    "source_file_checksum": {
+      "title": "Source File Checksum",
+      "type": "string"
+    },
+    "local_source_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Local Source Ref"
+    },
+    "private_source": {
+      "default": true,
+      "title": "Private Source",
+      "type": "boolean"
+    },
+    "extraction_settings": {
+      "$ref": "#/$defs/ExtractionSettings"
+    },
+    "metadata": {
+      "title": "Metadata",
+      "type": "object"
+    }
+  },
+  "required": [
+    "source_book_id",
+    "book_title",
+    "ruleset",
+    "source_file_id",
+    "source_file_checksum"
+  ],
+  "title": "SourceBook",
+  "type": "object"
+}
