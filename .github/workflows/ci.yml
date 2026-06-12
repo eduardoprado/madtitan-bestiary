@@ -10,8 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate synthetic fixture JSON
-        run: python -m json.tool samples/synthetic/monster_occurrences.json >/tmp/monster_occurrences.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install contract test dependencies
+        run: python -m pip install -e "packages/contracts/python[dev]"
+      - name: Run contract tests
+        run: pytest packages/contracts/python/tests
+      - name: Validate sample contracts
+        run: madtitan-contracts validate samples
       - name: Check private data guardrails
         run: |
           test ! -d data
